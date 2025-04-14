@@ -1,7 +1,7 @@
-from app.repositories.user import UserRepository
-from app.schemas.user import UserCreate, UserResponse, SignUp
-from app.core.security.passwords import hash_password
-from app.core.exceptions.base_exceptions import ResourceAlreadyInUseError
+from ..repositories.user import UserRepository
+from ..schemas.user import UserCreate, UserResponse, SignUp
+from ..core.security.passwords import hash_password
+from ..core.exceptions.base_exceptions import ResourceAlreadyInUseError
 
 class UserService:
     def __init__(self, user_repository: UserRepository):

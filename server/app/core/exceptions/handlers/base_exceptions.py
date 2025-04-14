@@ -1,7 +1,7 @@
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
-from app.main import app
-from app.core.exceptions.base_exceptions import (
+from ....main import app
+from ..base_exceptions import (
     BaseAppException,
     ResourceNotFoundError, 
     ResourceAlreadyInUseError, 

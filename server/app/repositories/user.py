@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.user import User
-from app.schemas.user import UserCreate, SignUp
+from ..models.user import User
+from ..schemas.user import UserCreate, SignUp
 
 class UserRepository:
     def __init__(self, db: Session):

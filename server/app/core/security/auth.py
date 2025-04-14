@@ -2,7 +2,7 @@ import jwt
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
-from app.core.config.settings import settings
+from ..config.settings import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/authorize")
 pwd_context = CryptContext(schemes=["bcrypt"])

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
-from app.schemas.user import SignUp, UserResponse
-from app.services.user import UserService 
-from app.core.dependencies import Annotated, Depends, get_user_service
+from ...schemas.user import SignUp, UserResponse
+from ...services.user import UserService 
+from ...core.dependencies import Annotated, Depends, get_user_service
 
 router = APIRouter(
     prefix="/authentication", 
