@@ -23,7 +23,7 @@ class User(Base):
     password = Column(String, nullable=False)
     firstname = Column(String, nullable=False)
     lastname = Column(String, nullable=False)
-    phone = Column(String, unique=True, nullable=False)
+    phone = Column(String, unique=True, nullable=True)
     address = Column(String, nullable=True)
     role_id = Column(Integer, ForeignKey('user_roles.id'), nullable=True)
     status_id = Column(Integer, ForeignKey('user_status.id'), nullable=True)
