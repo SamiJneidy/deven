@@ -1,20 +1,18 @@
-from pydantic import BaseModel, EmailStr, StringConstraints, ConfigDict
+from pydantic import BaseModel, EmailStr, StringConstraints, ConfigDict, Field
 from datetime import datetime
 from typing import Annotated
 
-NonEmptyStr = Annotated[str, StringConstraints(min_length=1)]
-
 class UserBase(BaseModel):
-    email: EmailStr
-    firstname: NonEmptyStr
-    lastname: NonEmptyStr
-    phone: str | None = None
-    address: str | None = None
-    role_id: int | None = None
-    status_id: int | None = None
+    email: EmailStr = Field(..., example="user@example.com")
+    firstname: str = Field(..., example="Sami", min_length=1)
+    lastname: str = Field(..., example="Jneidy", min_length=1)
+    phone: str | None = Field(default=None, example="+963934989517")
+    address: str | None = Field(default=None, example="St 40, Latakia, Syria")
+    role_id: int | None = Field(default=None, example=1)
+    status_id: int | None = Field(default=None, example=1)
 
 class UserCreate(UserBase):
-    password: NonEmptyStr
+    password: str = Field(..., example="abcABC123", min_length=8, description="The password must be a minimum of 8 characters in length, containing both uppercase and lowercase English letters and at least one numeric digit.")
 
 class UserUpdate(UserBase):
     pass
