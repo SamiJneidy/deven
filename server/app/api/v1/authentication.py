@@ -33,5 +33,6 @@ async def signup(
     user_data: SignUp,
     user_service: Annotated[UserService, Depends(get_user_service)],
 ):
-    """Sign up a new user"""
-    return await user_service.signup(user_data)
+    """Sign up a new user""" 
+    data = await user_service.signup(user_data)
+    return SignleObjectResponse[UserResponse](data=data)
