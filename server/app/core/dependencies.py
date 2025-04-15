@@ -6,7 +6,6 @@ from .database.database import get_db
 from ..repositories.user import UserRepository
 from ..services.user import UserService
 
-# User
 def get_user_repository(db: Annotated[Session, Depends(get_db)]) -> UserRepository:
     """Returns user repository dependency"""
     return UserRepository(db)

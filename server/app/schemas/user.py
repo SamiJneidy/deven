@@ -9,7 +9,7 @@ class UserBase(BaseModel):
     phone: str | None = Field(default=None, example="+963934989517")
     address: str | None = Field(default=None, example="St 40, Latakia, Syria")
     role_id: int | None = Field(default=None, example=1)
-    status_id: int | None = Field(default=None, example=1)
+    status_id: int | None = Field(default=None, example=4)
 
 class SignUp(BaseModel):
     email: EmailStr = Field(..., example="user@example.com")

@@ -1,6 +1,7 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, HTTPException
+from ...schemas.common import SignleObjectResponse
 from ...schemas.user import SignUp, UserResponse
-from ...services.user import UserService 
+from ...services.user import UserService
 from ...core.dependencies import Annotated, Depends, get_user_service
 
 router = APIRouter(
@@ -10,13 +11,10 @@ router = APIRouter(
 
 @router.post(
     path="/signup", 
-    response_model=UserResponse,
+    response_model=SignleObjectResponse[UserResponse],
     responses={
         status.HTTP_200_OK: {
             "description": "The user has signed up successfully."
-        },
-        status.HTTP_422_UNPROCESSABLE_ENTITY: {
-            "description": "Some fields violates the defined schemas for the request body."
         },
         status.HTTP_409_CONFLICT: {
             "description": "The email has been registered before.",
