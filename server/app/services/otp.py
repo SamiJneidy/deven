@@ -46,8 +46,6 @@ class OTPService:
         db_otp = await self.otp_repository.get_otp_by_code(otp_verification_data.code)
         if db_otp is None:
             raise InvalidOTPError()
-        if db_otp.email != otp_verification_data.email:
-            raise SuspiciousOTPActivityError()
         if await self.otp_expired(otp_verification_data.code):
             raise ExpiredOTPError()
         if db_otp.status == OTPStatus.EXPIRED or db_otp.status == OTPStatus.VERIFIED:

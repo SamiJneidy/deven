@@ -17,7 +17,6 @@ class OTPResponse(OTPBase):
     model_config = ConfigDict(from_attributes=True)
 
 class OTPVerification(BaseModel):
-    email: EmailStr = Field(..., example="user@example.com")
     code: str = Field(..., example="1234656")
 
 class OTPVerificationResponse(BaseModel):
