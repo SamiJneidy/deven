@@ -12,13 +12,6 @@ class UserRepository:
     async def get_user_by_email(self, email: str) -> User | None:
         return self.db.query(User).filter(User.email == email).first()
 
-    async def signup(self, data: SignUp) -> User:
-        db_user = User(**data.model_dump(exclude_unset=True))
-        self.db.add(db_user)
-        self.db.commit()
-        self.db.refresh(db_user)
-        return db_user
-
     async def create_user(self, data: UserCreate) -> User:
         db_user = User(**data.model_dump(exclude_unset=True))
         self.db.add(db_user)

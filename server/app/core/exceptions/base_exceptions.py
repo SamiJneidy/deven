@@ -17,12 +17,3 @@ class ResourceNotFoundError(BaseAppException):
     def __init__(self, resource_name: str = "Resource", message: str = None):
         message = message or f"{resource_name} not found"
         super().__init__(message, status.HTTP_404_NOT_FOUND)
-
-
-
-class Conflict(BaseAppException):
-    """Raised when trying to register a resource that's already in use."""
-    def __init__(self, status_code = 409, message = "Conflict"):
-        self.status_code=status_code
-        self.message=message
-        super().__init__(message, status.HTTP_409_CONFLICT)

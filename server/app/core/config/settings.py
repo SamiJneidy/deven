@@ -1,15 +1,22 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    secret_key: str
-    algorithm: str
-    access_token_expire_minutes: int
-    db_hostname: str
-    db_name: str
-    db_port: int
-    db_username: str
-    db_password: str
-    sqlalchemy_url: str
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRATION_MINUTES: int
+    PASSWORD_RESET_OTP_EXPIRATION_MINUTES: int
+    EMAIL_VERIFICATION_OTP_EXPIRATION_MINUTES: int
+    DB_NAME: str
+    DB_PASSWORD: str
+    DB_USERNAME: str
+    DB_HOSTNAME: str
+    DB_PORT: int
+    SQLALCHEMY_URL: str
+    MAIL_USERNAME: str
+    MAIL_PASSWORD: str
+    MAIL_FROM: str
+    MAIL_PORT: int
+    MAIL_SERVER: str
     model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings()

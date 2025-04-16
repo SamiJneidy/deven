@@ -8,7 +8,8 @@ from alembic import context
 # ADDED BY ME
 # Import project objects
 from app.core.database.database import Base
-from app.models.user import User, UserRoles, UserStatus
+from app.models.user import User
+from app.models.otp import OTP
 from app.core.config.settings import settings
 
 # this is the Alembic Config object, which provides
@@ -18,7 +19,7 @@ config = context.config
 
 # ADDED BY ME
 # Set the DB URL from .env
-config.set_main_option("sqlalchemy.url", settings.sqlalchemy_url)
+config.set_main_option("sqlalchemy.url", settings.SQLALCHEMY_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

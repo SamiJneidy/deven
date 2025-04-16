@@ -2,11 +2,11 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
 from .core.exceptions.exception_handlers import base_exception_handler
-from .core.exceptions.service_exceptions import BaseAppException
-from .api.v1.authentication import router
+from .core.exceptions.base_exceptions import BaseAppException
+from .api.v1 import router
 
 app = FastAPI()
-app.include_router(router)
+app.include_router(router, prefix="/api/v1")
 
 @app.exception_handler(BaseAppException)
 async def app_exception_handler(request, e):

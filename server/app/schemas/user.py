@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr, StringConstraints, ConfigDict, Field
 from datetime import datetime
 from typing import Annotated
+from ..core.enums import UserRole, UserStatus
 
 class UserBase(BaseModel):
     email: EmailStr = Field(..., example="user@example.com")
@@ -8,8 +9,8 @@ class UserBase(BaseModel):
     lastname: str = Field(..., example="Jneidy", min_length=1)
     phone: str | None = Field(default=None, example="+963934989517")
     address: str | None = Field(default=None, example="St 40, Latakia, Syria")
-    role_id: int | None = Field(default=None, example=1)
-    status_id: int | None = Field(default=None, example=4)
+    role: UserRole | None = Field(default=None, example=UserRole.ADMIN)
+    status: UserStatus | None = Field(default=None, example=UserStatus.ACTIVE)
 
 class SignUp(BaseModel):
     email: EmailStr = Field(..., example="user@example.com")
