@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 from sqlalchemy.orm import Session
 from typing import Annotated
 from .config.settings import settings
@@ -7,9 +7,9 @@ from ..repositories.user import UserRepository
 from ..repositories.otp import OTPRepository
 from ..services.user import UserService
 from ..services.otp import OTPService
+from ..services.auth import AuthService
 
 # OTP
-
 def get_otp_repository(db: Annotated[Session, Depends(get_db)]) -> OTPRepository:
     """Returns otp repository dependency"""
     return OTPRepository(db)
@@ -30,6 +30,16 @@ def get_user_service(
 ) -> UserService:
     """Returns user service dependency"""
     return UserService(user_repo, otp_service)
+
+
+# Auth
+def get_auth_service(
+    user_service: Annotated[Session, Depends(get_user_service)],
+    otp_service: Annotated[Session, Depends(get_otp_service)],
+) -> AuthService:
+    """Returns auth service dependency"""
+    return AuthService(user_service, otp_service)
+
 
 # async def get_current_user(
 #     db: DBDep,

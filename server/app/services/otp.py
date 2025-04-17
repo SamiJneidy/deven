@@ -14,7 +14,7 @@ class OTPService:
         db_otp = await self.otp_repository.get_otp_by_code(code)
         return OTPResponse.model_validate(db_otp)
 
-    async def create_email_verification_otp(self, email: str) -> None:
+    async def create_email_verification_otp(self, email: str) -> OTPResponse:
         """Creates an OTP code for email verification and sends it via email."""
         # Revole all existing email verification codes for this user
         usage: OTPUsage = OTPUsage.EMAIL_VERIFICATION 
@@ -39,6 +39,35 @@ class OTPService:
         )
         db_otp = await self.otp_repository.create_otp(otp_data)
         await self.send_otp_for_email_verification(email, code)
+        return OTPResponse.model_validate(db_otp)
+
+    async def create_password_reset_otp(self, email: str) -> OTPResponse:
+        """Creates an OTP code for password reset and sends it via email."""
+        # Revole all existing password reset codes for this user
+        usage: OTPUsage = OTPUsage.PASSWORD_RESET 
+        await self.otp_repository.revoke_otps_for_user(email, usage)
+        # Generate a new unique OTP code
+        while True:   
+            code: str = await self.otp_repository.generate_code()
+            code_count: int = await self.otp_repository.get_otp_count_by_code(code)
+            if code_count == 0:
+                break
+        
+        status: OTPStatus = OTPStatus.PENDING
+        # Calculate expiration time for the generated OTP
+        expires_at = datetime.now() + timedelta(minutes=settings.PASSWORD_RESET_OTP_EXPIRATION_MINUTES)
+        # Insert the generated OTP to the database
+        otp_data: OTPCreate = OTPCreate(
+            email=email, 
+            code=code, 
+            usage=usage, 
+            status=status, 
+            expires_at=expires_at
+        )
+        db_otp = await self.otp_repository.create_otp(otp_data)
+        await self.send_otp_for_password_reset(email, code)
+        return OTPResponse.model_validate(db_otp)
+    
 
     async def otp_expired(self, code: str) -> bool:
         db_otp = await self.otp_repository.get_otp_by_code(code)
@@ -63,4 +92,11 @@ class OTPService:
             to=[email],
             subject="Email verification",
             body=f"Please use this code to verify your account: {code}"
+        )   
+
+    async def send_otp_for_password_reset(self, email: str, code: str) -> None:
+        await send_email(
+            to=[email],
+            subject="Password Reset",
+            body=f"Please use this code to reset your password: {code}"
         )   

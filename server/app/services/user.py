@@ -3,13 +3,19 @@ from .otp import OTPRepository, OTPService
 from ..repositories.user import UserRepository
 from ..schemas.user import UserCreate, UserResponse, SignUp
 from ..core.security.passwords import hash_password
-from ..core.exceptions.base_exceptions import ResourceAlreadyInUseError
+from ..core.exceptions.base_exceptions import ResourceAlreadyInUseError, ResourceNotFoundError
 from ..core.enums import UserRole, UserStatus, OTPStatus, OTPUsage
 
 class UserService:
     def __init__(self, user_repository: UserRepository, otp_service: OTPService):
         self.user_repository = user_repository
         self.otp_service = otp_service
+
+    async def get_user_by_email(self, email: str) -> UserResponse:
+        user = await self.user_repository.get_user_by_email(email)
+        if user is None:
+            raise ResourceNotFoundError("User")
+        return user
 
     async def signup(self, user_data: SignUp) -> UserResponse:
         if await self.user_repository.get_user_by_email(user_data.email):
