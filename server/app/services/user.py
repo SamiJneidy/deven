@@ -22,13 +22,15 @@ class UserService:
         await self.otp_service.create_email_verification_otp(email=user_data.email)
         return UserResponse.model_validate(db_user)
 
-
     async def create_user(self, user_data: UserCreate) -> UserResponse:
         if await self.user_repository.get_user_by_email(user_data.email):
             raise ResourceAlreadyInUseError("Email")
-        
         user_data.password = hash_password(user_data.password)
-
         db_user = await self.user_repository.create_user(user_data)
         return UserResponse.model_validate(db_user)
-     
+
+    async def verify_user(self, email: str) -> None:
+        await self.user_repository.verify_user(email)
+
+    async def delete_user(self, email: str) -> None:
+        await self.user_repository.delete_user(email)

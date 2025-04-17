@@ -8,12 +8,12 @@ class InvalidOTPError(BaseAppException):
 
 class ExpiredOTPError(BaseAppException):
     """Raised when the OTP code is expired."""
-    def __init__(self, message: str = "OTP code has expired", status_code: int = status.HTTP_401_UNAUTHORIZED):
+    def __init__(self, message: str = "OTP code has expired. Please request a new one.", status_code: int = status.HTTP_401_UNAUTHORIZED):
         super().__init__(message, status_code)
 
 class OTPAlreadyUsedError(BaseAppException):
     """Raised when the OTP has already been used and cannot be reused."""
-    def __init__(self, message: str = "The OTP code has been used before. Please request a new one.", status_code: int = status.HTTP_400_BAD_REQUEST):
+    def __init__(self, message: str = "The OTP code has been used before. Please request a new one.", status_code: int = status.HTTP_401_UNAUTHORIZED):
         super().__init__(message, status_code)
 
 class MultipleOTPsDetectedError(BaseAppException):

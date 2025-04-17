@@ -20,4 +20,5 @@ class OTPVerification(BaseModel):
     code: str = Field(..., example="1234656")
 
 class OTPVerificationResponse(BaseModel):
+    email: EmailStr = Field(..., example="user@example.com")
     message: str = Field(..., example="Verification completed.")

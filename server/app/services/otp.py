@@ -4,11 +4,15 @@ from ..repositories.otp import OTPRepository
 from ..core.exceptions.otp_exceptions import InvalidOTPError, ExpiredOTPError, OTPAlreadyUsedError, SuspiciousOTPActivityError, MultipleOTPsDetectedError
 from ..core.config.settings import settings
 from ..core.utilities.mail import send_email 
-from ..schemas.otp import OTPCreate, OTPVerification, OTPVerificationResponse
+from ..schemas.otp import OTPCreate, OTPResponse, OTPVerification, OTPVerificationResponse
 
 class OTPService:
     def __init__(self, otp_repository: OTPRepository):
         self.otp_repository = otp_repository
+
+    async def get_otp_by_code(self, code: str) -> OTPResponse:
+        db_otp = await self.otp_repository.get_otp_by_code(code)
+        return OTPResponse.model_validate(db_otp)
 
     async def create_email_verification_otp(self, email: str) -> None:
         """Creates an OTP code for email verification and sends it via email."""
@@ -52,7 +56,7 @@ class OTPService:
             raise OTPAlreadyUsedError()
         
         await self.otp_repository.verify_otp(otp_verification_data.code)
-        return OTPVerificationResponse(message="Verification completed.")
+        return OTPVerificationResponse(email=db_otp.email, message="Verification completed.")
     
     async def send_otp_for_email_verification(self, email: str, code: str) -> None:
         await send_email(
