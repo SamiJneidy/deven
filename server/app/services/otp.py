@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from ..models.otp import OTPStatus, OTPUsage
 from ..repositories.otp import OTPRepository
-from ..core.exceptions.otp_exceptions import InvalidOTPError, ExpiredOTPError, OTPAlreadyUsedError, SuspiciousOTPActivityError, MultipleOTPsDetectedError
+from ..core.exceptions.otp_exceptions import InvalidOTPError, ExpiredOTPError, OTPAlreadyUsedError, OTPNotFoundError
 from ..core.config.settings import settings
 from ..core.utilities.mail import send_email 
 from ..schemas.otp import OTPCreate, OTPResponse, OTPVerification, OTPVerificationResponse
@@ -12,6 +12,14 @@ class OTPService:
 
     async def get_otp_by_code(self, code: str) -> OTPResponse:
         db_otp = await self.otp_repository.get_otp_by_code(code)
+        if db_otp is None:
+            raise OTPNotFoundError()
+        return OTPResponse.model_validate(db_otp)
+
+    async def get_otp_by_email(self, email: str, usage: OTPUsage) -> OTPResponse:
+        db_otp = await self.otp_repository.get_otp_by_email(email, usage)
+        if db_otp is None:
+            raise OTPNotFoundError()
         return OTPResponse.model_validate(db_otp)
 
     async def create_email_verification_otp(self, email: str) -> OTPResponse:

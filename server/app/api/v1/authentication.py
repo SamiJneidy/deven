@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, HTTPException
 from ...schemas.common import SignleObjectResponse
 from ...schemas.otp import OTPResponse, OTPVerification, OTPVerificationResponse
 from ...schemas.user import SignUp, UserResponse
-from ...schemas.auth import PasswordResetOTPRequest, PasswordResetOTPResponse
+from ...schemas.auth import PasswordResetRequest, PasswordResetOTPRequest, PasswordResetOTPResponse
 from ...services.user import UserService
 from ...services.otp import OTPService
 from ...services.auth import AuthService
@@ -85,42 +85,42 @@ async def request_password_reset_otp(
 
 @router.post(
     path="/reset-password", 
-    response_model=PasswordResetOTPResponse,
-    responses={
-        status.HTTP_200_OK: {
-            "description": "The OTP code has been sent successfully."
-        },
-        status.HTTP_404_NOT_FOUND: {
-            "description": "The user who requested the password reset was not found.",
-            "content": {
-                "application/json": {
-                    "exmpale": {
-                        "code": status.HTTP_404_NOT_FOUND,
-                        "message": "User not found"
-                    }
-                }
-            }
-        },
-        status.HTTP_400_BAD_REQUEST: {
-            "description": "The user who requested password reset is not active.",
-            "content": {
-                "application/json": {
-                    "exmpale": {
-                        "code": status.HTTP_400_BAD_REQUEST,
-                        "message": "User is not active"
-                    }
-                }
-            }
-        }
-    }
+    response_model=UserResponse,
+    # responses={
+    #     status.HTTP_200_OK: {
+    #         "description": "The OTP code has been sent successfully."
+    #     },
+    #     status.HTTP_404_NOT_FOUND: {
+    #         "description": "The user who requested the password reset was not found.",
+    #         "content": {
+    #             "application/json": {
+    #                 "exmpale": {
+    #                     "code": status.HTTP_404_NOT_FOUND,
+    #                     "message": "User not found"
+    #                 }
+    #             }
+    #         }
+    #     },
+    #     status.HTTP_400_BAD_REQUEST: {
+    #         "description": "The user who requested password reset is not active.",
+    #         "content": {
+    #             "application/json": {
+    #                 "exmpale": {
+    #                     "code": status.HTTP_400_BAD_REQUEST,
+    #                     "message": "User is not active"
+    #                 }
+    #             }
+    #         }
+    #     }
+    # }
 )
-async def request_password_reset_otp(
-    password_reset_otp_request: PasswordResetOTPRequest,
+async def reset_password(
+    password_reset_request: PasswordResetRequest,
     auth_service: Annotated[AuthService, Depends(get_auth_service)],
 
 ):
-    """Create a password reset OTP and send it to the user via email. Note that in case the user account was not active then the code will not be sent.""" 
-    return await auth_service.request_password_reset_otp(password_reset_otp_request)
+    """Resets the password of the user. Note that the user has verify the OTP code in order to reset his password.""" 
+    return await auth_service.reset_password(password_reset_request)
 
 
 @router.post(

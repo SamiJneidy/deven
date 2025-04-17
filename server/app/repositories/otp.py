@@ -20,10 +20,12 @@ class OTPRepository:
         self.db.execute(delete(OTP).where(OTP.email==email, OTP.usage==usage))
         self.db.commit()
 
-    async def get_otp_by_email(self, code: str, usage: OTPUsage) -> OTP | None:
-        return self.db.query(OTP).filter(OTP.code==code, OTP.usage==usage).first()
+    async def get_otp_by_email(self, email: str, usage: OTPUsage) -> OTP | None:
+        """Returns an OTP model by email and usage."""
+        return self.db.query(OTP).filter(OTP.email==email, OTP.usage==usage).first()
 
     async def get_otp_by_code(self, code: str) -> OTP | None:
+        """Returns an OTP model by code."""
         return self.db.query(OTP).filter(OTP.code==code).first()
 
     async def get_otp_count_by_user(self, email: str, usage: OTPUsage) -> int:

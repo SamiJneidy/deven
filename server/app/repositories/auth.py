@@ -2,14 +2,19 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select, insert, update, delete
 from ..models.user import User
 from ..schemas.user import UserCreate, SignUp
+from ..schemas.auth import PasswordResetRequest
 from ..core.enums import UserRole, UserStatus
 
-# class AuthRepository:
-#     def __init__(self, db: Session):
-#         self.db = db
+class AuthRepository:
+    def __init__(self, db: Session):
+        self.db = db
 
-#     async def get_user_by_id(self, id: int) -> User | None:
-#         return self.db.query(User).filter(User.id == id).first()
+    async def reset_password(self, email: str, hashed_password: str) -> User | None:
+        db_user = self.db.query(User).filter(User.email == email).first()
+        db_user.password = hashed_password
+        self.db.commit()
+        self.db.refresh(db_user)
+        return db_user
 
 #     async def get_user_by_email(self, email: str) -> User | None:
 #         return self.db.query(User).filter(User.email == email).first()

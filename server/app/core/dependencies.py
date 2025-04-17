@@ -5,6 +5,7 @@ from .config.settings import settings
 from .database.database import get_db
 from ..repositories.user import UserRepository
 from ..repositories.otp import OTPRepository
+from ..repositories.auth import AuthRepository
 from ..services.user import UserService
 from ..services.otp import OTPService
 from ..services.auth import AuthService
@@ -33,12 +34,17 @@ def get_user_service(
 
 
 # Auth
+def get_auth_repository(db: Annotated[Session, Depends(get_db)]) -> AuthRepository:
+    """Returns auth repository dependency"""
+    return AuthRepository(db)
+
 def get_auth_service(
+    auth_repo: Annotated[AuthRepository, Depends(get_auth_repository)],
     user_service: Annotated[Session, Depends(get_user_service)],
     otp_service: Annotated[Session, Depends(get_otp_service)],
 ) -> AuthService:
     """Returns auth service dependency"""
-    return AuthService(user_service, otp_service)
+    return AuthService(auth_repo, user_service, otp_service)
 
 
 # async def get_current_user(
