@@ -1,9 +1,9 @@
 from fastapi import status
-from .base_exceptions import BaseAppException, ResourceNotFoundError
+from .base import BaseAppException, ResourceNotFoundError
 
 class InvalidOTPError(BaseAppException):
     """Raised when the OTP code is invalid."""
-    def __init__(self, message: str = "Invalid OTP", status_code: int = status.HTTP_401_UNAUTHORIZED):
+    def __init__(self, message: str = "Invalid OTP.", status_code: int = status.HTTP_401_UNAUTHORIZED):
         super().__init__(message, status_code)
 
 class ExpiredOTPError(BaseAppException):
@@ -28,5 +28,5 @@ class SuspiciousOTPActivityError(BaseAppException):
 
 class OTPNotFoundError(BaseAppException):
     """Raised when the OTP is not found."""
-    def __init__(self, message: str = "OTP not found", status_code: int = status.HTTP_404_NOT_FOUND):
+    def __init__(self, message: str = "OTP not found.", status_code: int = status.HTTP_404_NOT_FOUND):
         super().__init__(message, status_code)

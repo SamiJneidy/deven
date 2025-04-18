@@ -1,8 +1,8 @@
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
-from .core.exceptions.exception_handlers import base_exception_handler
-from .core.exceptions.base_exceptions import BaseAppException
+from .core.exceptions.handlers import base_exception_handler
+from .core.exceptions.base import BaseAppException
 from .api.v1 import router
 
 app = FastAPI()

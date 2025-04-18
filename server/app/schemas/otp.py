@@ -16,7 +16,7 @@ class OTPCreate(OTPBase):
 class OTPResponse(OTPBase):
     model_config = ConfigDict(from_attributes=True)
 
-class OTPVerification(BaseModel):
+class OTPVerificationRequest(BaseModel):
     code: str = Field(..., example="1234656")
 
 class OTPVerificationResponse(BaseModel):

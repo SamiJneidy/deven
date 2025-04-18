@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from .base_exceptions import BaseAppException
+from .base import BaseAppException
 
 async def base_exception_handler(request: Request, exc: BaseAppException):
     return JSONResponse(

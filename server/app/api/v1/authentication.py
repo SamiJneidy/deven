@@ -1,13 +1,21 @@
-from fastapi import APIRouter, status, HTTPException
-from ...schemas.common import SignleObjectResponse
-from ...schemas.otp import OTPResponse, OTPVerification, OTPVerificationResponse
-from ...schemas.user import SignUp, UserResponse
-from ...schemas.auth import PasswordResetRequest, PasswordResetOTPRequest, PasswordResetOTPResponse
-from ...services.user import UserService
-from ...services.otp import OTPService
-from ...services.auth import AuthService
+from fastapi import APIRouter, status, HTTPException, Response
+from ...schemas import (
+    SignleObjectResponse,
+    OTPResponse, 
+    OTPVerificationRequest, 
+    OTPVerificationResponse, 
+    UserResponse,
+    SignUp,
+    Login,
+    TokenResponse,
+    PasswordResetRequest,
+    PasswordResetOTPRequest,
+    PasswordResetOTPResponse,
+)
+from ...services import UserService, OTPService, AuthService
 from ...core.dependencies import Annotated, Depends, get_auth_service, get_user_service, get_otp_service
-from ...core.enums import OTPStatus, OTPUsage
+from ...core.enums import OTPUsage
+from ...core.config.settings import settings
 
 router = APIRouter(
     prefix="/authentication", 
@@ -37,11 +45,71 @@ router = APIRouter(
 )
 async def signup(
     user_data: SignUp,
-    user_service: Annotated[UserService, Depends(get_user_service)],
+    auth_service: Annotated[AuthService, Depends(get_auth_service)],
 ):
     """Sign up a new user""" 
-    data = await user_service.signup(user_data)
+    data = await auth_service.signup(user_data)
     return SignleObjectResponse[UserResponse](data=data)
+
+@router.post(
+    path="/login",
+    response_model=TokenResponse,
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Logged in successfully."
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "The user was not found.",
+            "content": {
+                "application/json": {
+                    "exmpale": {
+                        "code": status.HTTP_404_NOT_FOUND,
+                        "message": "User not found."
+                    }
+                }
+            }
+        },
+        status.HTTP_400_BAD_REQUEST: {
+            "description": "The user is not active.",
+            "content": {
+                "application/json": {
+                    "exmpale": {
+                        "code": status.HTTP_400_BAD_REQUEST,
+                        "message": "User is not active."
+                    }
+                }
+            }
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Could not validate credentials.",
+            "content": {
+                "application/json": {
+                    "exmpale": {
+                        "code": status.HTTP_401_UNAUTHORIZED,
+                        "message": "Invalid credentials."
+                    }
+                }
+            }
+        }
+    }
+)
+async def login(
+    response: Response,
+    login_data: Login,
+    auth_service: Annotated[AuthService, Depends(get_auth_service)],
+):
+    access_token, refresh_token = await auth_service.create_tokens_for_login(login_data)
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=True,
+        samesite="Lax",
+        max_age=settings.REFRESH_TOKEN_EXPIRATION_DAYS * 24 * 60 * 60,
+        path="/auth/refresh"
+    
+    )
+    return TokenResponse(access_token=access_token)
 
 @router.post(
     path="/request-password-reset-otp", 
@@ -56,7 +124,7 @@ async def signup(
                 "application/json": {
                     "exmpale": {
                         "code": status.HTTP_404_NOT_FOUND,
-                        "message": "User not found"
+                        "message": "User not found."
                     }
                 }
             }
@@ -67,7 +135,7 @@ async def signup(
                 "application/json": {
                     "exmpale": {
                         "code": status.HTTP_400_BAD_REQUEST,
-                        "message": "User is not active"
+                        "message": "User is not active."
                     }
                 }
             }
@@ -86,38 +154,37 @@ async def request_password_reset_otp(
 @router.post(
     path="/reset-password", 
     response_model=UserResponse,
-    # responses={
-    #     status.HTTP_200_OK: {
-    #         "description": "The OTP code has been sent successfully."
-    #     },
-    #     status.HTTP_404_NOT_FOUND: {
-    #         "description": "The user who requested the password reset was not found.",
-    #         "content": {
-    #             "application/json": {
-    #                 "exmpale": {
-    #                     "code": status.HTTP_404_NOT_FOUND,
-    #                     "message": "User not found"
-    #                 }
-    #             }
-    #         }
-    #     },
-    #     status.HTTP_400_BAD_REQUEST: {
-    #         "description": "The user who requested password reset is not active.",
-    #         "content": {
-    #             "application/json": {
-    #                 "exmpale": {
-    #                     "code": status.HTTP_400_BAD_REQUEST,
-    #                     "message": "User is not active"
-    #                 }
-    #             }
-    #         }
-    #     }
-    # }
+    responses={
+        status.HTTP_200_OK: {
+            "description": "The password has been reset successfully."
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "The password could not be reset due to OTP error or security reason.",
+            "content": {
+                "application/json": {
+                    "exmpale": {
+                        "code": status.HTTP_401_UNAUTHORIZED,
+                        "message": "Password reset not allowed. Request a new OTP code and try again."
+                    }
+                }
+            }
+        },
+        status.HTTP_400_BAD_REQUEST: {
+            "description": "The new password must match the confirmation password.",
+            "content": {
+                "application/json": {
+                    "exmpale": {
+                        "code": status.HTTP_400_BAD_REQUEST,
+                        "message": "Passwords don't match."
+                    }
+                }
+            }
+        }
+    }
 )
 async def reset_password(
     password_reset_request: PasswordResetRequest,
     auth_service: Annotated[AuthService, Depends(get_auth_service)],
-
 ):
     """Resets the password of the user. Note that the user has verify the OTP code in order to reset his password.""" 
     return await auth_service.reset_password(password_reset_request)
@@ -138,7 +205,7 @@ async def reset_password(
                         "InvalidOTPError": {
                             "value": {
                                 "code": status.HTTP_401_UNAUTHORIZED,
-                                "message": "Invalid OTP"
+                                "message": "Invalid OTP."
                             }
                         },
                         "ExpiredOTPError": {
@@ -160,11 +227,11 @@ async def reset_password(
     }
 )
 async def verify_otp(
-    otp_verification_data: OTPVerification,
+    otp_verification_data: OTPVerificationRequest,
     otp_service: Annotated[OTPService, Depends(get_otp_service)],
     user_service: Annotated[UserService, Depends(get_user_service)]
 ):
-    """Verify an OTP code for any usage (email verification, password reset, ...). Note that in case the usage of the code is email verification, the user with this email will be set as 'active'.""" 
+    """Verify an OTP code for email verification, password reset, ...etc. Note that in case the usage of the code is email verification, the user with this email will be set as 'active'.""" 
     otp_verification_response: OTPVerificationResponse = await otp_service.verify_otp(otp_verification_data)
     otp: OTPResponse = await otp_service.get_otp_by_code(otp_verification_data.code)
     if otp.usage == OTPUsage.EMAIL_VERIFICATION:
@@ -176,7 +243,7 @@ async def verify_otp(
     path="/",
     status_code=status.HTTP_204_NO_CONTENT
 )
-async def delete_source(
+async def delete_user(
     email: str,
     user_service: Annotated[UserService, Depends(get_user_service)]
 ):

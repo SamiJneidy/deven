@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert, update, delete
-from ..models.user import User
-from ..schemas.user import UserCreate, SignUp
+from ..models import User
+from ..schemas import UserCreate
 from ..core.enums import UserRole, UserStatus
 
 class UserRepository:

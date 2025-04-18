@@ -12,12 +12,6 @@ class UserBase(BaseModel):
     role: UserRole | None = Field(default=None, example=UserRole.ADMIN)
     status: UserStatus | None = Field(default=None, example=UserStatus.ACTIVE)
 
-class SignUp(BaseModel):
-    email: EmailStr = Field(..., example="user@example.com")
-    firstname: str = Field(..., example="Sami", min_length=1)
-    lastname: str = Field(..., example="Jneidy", min_length=1)
-    password: str = Field(..., example="abcABC123", min_length=8, description="The password must be a minimum of 8 characters in length, containing both uppercase and lowercase English letters and at least one numeric digit.")
-
 class UserCreate(UserBase):
     password: str = Field(..., example="abcABC123", min_length=8, description="The password must be a minimum of 8 characters in length, containing both uppercase and lowercase English letters and at least one numeric digit.")
 

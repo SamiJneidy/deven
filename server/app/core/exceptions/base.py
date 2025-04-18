@@ -9,11 +9,11 @@ class BaseAppException(Exception):
 class ResourceAlreadyInUseError(BaseAppException):
     """Raised when trying to register a resource that's already in use."""
     def __init__(self, resource_name: str = "Resource", message: str = None):
-        message = message or f"{resource_name} already in use"
+        message = message or f"{resource_name} already in use."
         super().__init__(message, status.HTTP_409_CONFLICT)
 
 class ResourceNotFoundError(BaseAppException):
     """Raised when trying to access a resource that doesn't exist."""
     def __init__(self, resource_name: str = "Resource", message: str = None):
-        message = message or f"{resource_name} not found"
+        message = message or f"{resource_name} not found."
         super().__init__(message, status.HTTP_404_NOT_FOUND)
