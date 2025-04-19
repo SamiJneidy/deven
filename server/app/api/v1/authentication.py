@@ -1,4 +1,6 @@
 from fastapi import APIRouter, status, HTTPException, Response
+from fastapi.security import OAuth2PasswordRequestForm
+from redis.asyncio import Redis
 from ...schemas import (
     SignleObjectResponse,
     OTPResponse, 
@@ -13,7 +15,16 @@ from ...schemas import (
     PasswordResetOTPResponse,
 )
 from ...services import UserService, OTPService, AuthService
-from ...core.dependencies import Annotated, Depends, get_auth_service, get_user_service, get_otp_service
+from ...core.dependencies import (
+    Annotated, 
+    Session,
+    Depends, 
+    get_auth_service, 
+    get_user_service, 
+    get_otp_service,
+    get_redis,
+    oauth2_scheme
+)
 from ...core.enums import OTPUsage
 from ...core.config.settings import settings
 
@@ -106,10 +117,33 @@ async def login(
         secure=True,
         samesite="Lax",
         max_age=settings.REFRESH_TOKEN_EXPIRATION_DAYS * 24 * 60 * 60,
-        path="/auth/refresh"
+        path="/authentication/refresh"
     
     )
     return TokenResponse(access_token=access_token)
+
+@router.post(
+    path="/logout",
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Logged out successfully.",
+            "content": {
+                "application/json": {
+                    "exmpale": {
+                        "code": status.HTTP_200_OK,
+                        "message": "Logged out successfully."
+                    }
+                }
+            }
+        }
+    }
+)
+async def logout(token: str = Depends(oauth2_scheme), redis: Redis = Depends(get_redis)):
+    # Add token to Redis blacklist with TTL (e.g., 30 minutes)
+    print(token)
+    await redis.setex(f"blacklist:{token}", 600, "revoked")
+    return {"message": "Logged out successfully"}
+
 
 @router.post(
     path="/request-password-reset-otp", 
@@ -249,3 +283,33 @@ async def delete_user(
 ):
     """Deletes a user by email. This endpoint is used only during the development."""
     await user_service.delete_user(email)
+
+
+@router.post(
+    path="/swaggerlogin", 
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Logged in successfully",
+        },
+    },
+)
+async def swaggerlogin(
+    auth_service: Annotated[AuthService, Depends(get_auth_service)],
+    response: Response,
+    login_credentials: OAuth2PasswordRequestForm = Depends(), 
+):
+    """This is for SwaggerUI authentication for testing purposes only. Don't use this endpoint if you want to login as a frontend, use the login endpoint instead."""
+    login_data = Login(email=login_credentials.username, password=login_credentials.password)
+    access_token, refresh_token = await auth_service.create_tokens_for_login(login_data)
+    print(access_token, refresh_token)
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=True,
+        samesite="Lax",
+        max_age=settings.REFRESH_TOKEN_EXPIRATION_DAYS * 24 * 60 * 60,
+        path="/authentication/refresh"
+    
+    )
+    return {"access_token": access_token, "token_type": "bearer"}

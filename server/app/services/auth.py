@@ -1,4 +1,5 @@
 import jwt
+from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
 from .otp import OTPService
 from .user import UserService
@@ -25,6 +26,7 @@ from ..core.exceptions import (
     PasswordResetNotAllowedError, 
     PasswordsDontMatchError,
     OTPNotFoundError,
+    InvalidTokenError,
 )
 from ..core.enums import UserRole, UserStatus, OTPStatus, OTPUsage
 
@@ -41,6 +43,7 @@ class AuthService:
         self.otp_service = otp_service
 
     async def signup(self, user_data: SignUp) -> UserResponse:
+        """TO BE ADDED"""
         if await self.user_repository.get_user_by_email(user_data.email):
             raise EmailAlreadyInUseError()
         user_data.password = hash_password(user_data.password)
@@ -52,7 +55,7 @@ class AuthService:
         return UserResponse.model_validate(db_user)
 
     async def create_tokens_for_login(self, login_data: Login) -> tuple[str, str]:
-        """Returns a pair of token after successful login. The pais is (access token, refresh token)"""
+        """Returns a pair of token after successful login. The pais is (access token, refresh token)."""
         db_user = await self.user_repository.get_user_by_email(login_data.email)
         if not db_user:
             raise UserNotFoundError()
@@ -66,6 +69,7 @@ class AuthService:
         return (access_token, refresh_token)
 
     async def request_password_reset_otp(self, password_reset_otp_request: PasswordResetOTPRequest) -> PasswordResetOTPResponse:
+        """Request an OTP code for password reset."""
         user: UserResponse = await self.user_service.get_user_by_email(password_reset_otp_request.email)
         if user.status != UserStatus.ACTIVE:
             raise  UserNotActiveError()
@@ -73,6 +77,7 @@ class AuthService:
         return PasswordResetOTPResponse(message="The OTP code has been sent to your email. Check your inbox or spam folder.")
     
     async def reset_password(self, password_reset_request: PasswordResetRequest) -> UserResponse:
+        """Reset the password after verifying the OTP code."""
         try:
             otp: OTPResponse = await self.otp_service.get_otp_by_email(password_reset_request.email, OTPUsage.PASSWORD_RESET)
             if otp.status != OTPStatus.VERIFIED or password_reset_request.email != otp.email or await self.otp_service.otp_expired(otp.code):
@@ -86,14 +91,26 @@ class AuthService:
             raise PasswordResetNotAllowedError()
         
     async def create_access_token(self, token_payload: TokenPayload) -> str:
+        """Creates an access token."""
         token_payload.iat = datetime.now(tz=timezone.utc)
         token_payload.exp = datetime.now(tz=timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRATION_MINUTES)
         to_encode = token_payload.model_dump()
         return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
     async def create_refresh_token(self, token_payload: TokenPayload) -> str:
+        """Creates a refresh token."""
         token_payload.iat = datetime.now(tz=timezone.utc)
         token_payload.exp = datetime.now(tz=timezone.utc) + timedelta(days=settings.REFRESH_TOKEN_EXPIRATION_DAYS)
         to_encode = token_payload.model_dump()
         return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
-            
+    
+    async def get_user_from_token(self, token: str) -> UserResponse:
+        """Extracts user info from a token."""
+        try:
+            payload_dict: dict = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+            email = payload_dict.get("sub")
+            return await self.user_service.get_user_by_email(email)
+        except (jwt.InvalidTokenError, UserNotFoundError):
+            raise InvalidTokenError()
+        
+    

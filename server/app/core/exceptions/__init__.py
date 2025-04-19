@@ -4,6 +4,7 @@ from .auth import (
     PasswordResetNotAllowedError,
     PasswordsDontMatchError,
     EmailAlreadyInUseError,
+    InvalidTokenError,
 )
 
 from .users import (

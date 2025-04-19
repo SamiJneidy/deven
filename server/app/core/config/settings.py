@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     MAIL_FROM: str
     MAIL_PORT: int
     MAIL_SERVER: str
+    REDIS_URL: str
     model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings()

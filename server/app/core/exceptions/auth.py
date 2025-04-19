@@ -26,3 +26,8 @@ class EmailAlreadyInUseError(BaseAppException):
     def __init__(self, message: str = "Email already in use.", status_code: int = status.HTTP_409_CONFLICT):
         super().__init__(message, status_code)
  
+
+class InvalidTokenError(BaseAppException):
+    """Raised the token is invalid or expired."""
+    def __init__(self, message: str = "Invalid token.", status_code: int = status.HTTP_401_UNAUTHORIZED):
+        super().__init__(message, status_code)
