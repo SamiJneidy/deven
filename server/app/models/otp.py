@@ -2,8 +2,9 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, E
 from sqlalchemy.orm import relationship
 from ..core.database.database import Base
 from ..core.enums import OTPStatus, OTPUsage
+from .base import AuditTimeMixin
 
-class OTP(Base):
+class OTP(Base, AuditTimeMixin):
     __tablename__ = "otps"
     id = Column(Integer, primary_key=True)
     email = Column(String, nullable=False, index=True)
@@ -11,5 +12,4 @@ class OTP(Base):
     usage = Column(SQLEnum(OTPUsage), nullable=False)
     status = Column(SQLEnum(OTPStatus), nullable=False)
     expires_at = Column(DateTime, nullable=False)
-    created_at = Column(DateTime, nullable=False, default=func.now())
     

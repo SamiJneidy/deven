@@ -8,8 +8,11 @@ from alembic import context
 # ADDED BY ME
 # Import project objects
 from app.core.database.database import Base
+from app.models.base import AuditByMixin, AuditTimeMixin, AuditMixin
 from app.models.user import User
 from app.models.otp import OTP
+from app.models.hr import JobTitle, Department, Shift, WorkType, Employee
+from app.models.company import Company, CompanyLocation
 from app.core.config.settings import settings
 
 # this is the Alembic Config object, which provides

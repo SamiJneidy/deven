@@ -3,6 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
 from .otp import OTPService
 from .user import UserService
+from .company import CompanyService
 from ..repositories import AuthRepository, UserRepository
 from ..core.security.passwords import hash_password, verify_password
 from ..core.config.settings import settings
@@ -17,6 +18,8 @@ from ..schemas import (
     PasswordResetResponse, 
     PasswordResetOTPRequest, 
     PasswordResetOTPResponse,
+    CompanyCreate,
+    CompanyResponse,
 )
 from ..core.exceptions import (
     InvalidCredentialsError,
@@ -35,12 +38,14 @@ class AuthService:
         auth_repository: AuthRepository, 
         user_repository: UserRepository,
         user_service: UserService, 
-        otp_service: OTPService
+        otp_service: OTPService,
+        company_service: CompanyService,
     ):
         self.auth_repository = auth_repository
         self.user_repository = user_repository
         self.user_service = user_service
         self.otp_service = otp_service
+        self.company_service = company_service
 
     async def signup(self, user_data: SignUp) -> UserResponse:
         """TO BE ADDED"""
@@ -50,8 +55,14 @@ class AuthService:
         user_create = UserCreate(**user_data.model_dump())
         user_create.role = UserRole.ADMIN
         user_create.status = UserStatus.PENDING
-        db_user = await self.user_repository.create_user(user_create)
-        await self.otp_service.create_email_verification_otp(email=user_data.email)
+        user_dict: dict = user_create.model_dump()
+
+        company_data = CompanyCreate(name=f"{user_data.firstname}'s Company")
+        company = await self.company_service.create_company(company_data)
+        user_dict.update({"company_id": company.id})
+        db_user = await self.user_repository.create_user(user_dict)
+        x = await self.otp_service.create_email_verification_otp(email=user_data.email)
+        print(x.code)
         return UserResponse.model_validate(db_user)
 
     async def create_tokens_for_login(self, login_data: Login) -> tuple[str, str]:

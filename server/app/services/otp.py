@@ -45,7 +45,7 @@ class OTPService:
             status=status, 
             expires_at=expires_at
         )
-        db_otp = await self.otp_repository.create_otp(otp_data)
+        db_otp = await self.otp_repository.create_otp(otp_data.model_dump())
         await self.send_otp_for_email_verification(email, code)
         return OTPResponse.model_validate(db_otp)
 
@@ -72,7 +72,7 @@ class OTPService:
             status=status, 
             expires_at=expires_at
         )
-        db_otp = await self.otp_repository.create_otp(otp_data)
+        db_otp = await self.otp_repository.create_otp(otp_data.model_dmp())
         await self.send_otp_for_password_reset(email, code)
         return OTPResponse.model_validate(db_otp)
     

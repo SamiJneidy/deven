@@ -45,9 +45,13 @@ router = APIRouter(
             "description": "The email has been registered before.",
             "content": {
                 "application/json": {
-                    "example": {
-                        "code": status.HTTP_409_CONFLICT, 
-                        "message": "Email already in use."
+                    "examples": {
+                        "EmailAlreadyInUse":{
+                            "value": {
+                                "code": status.HTTP_409_CONFLICT, 
+                                "message": "Email already in use."
+                            }
+                        },
                     }
                 }
             }
@@ -73,9 +77,13 @@ async def signup(
             "description": "The user was not found.",
             "content": {
                 "application/json": {
-                    "exmpale": {
-                        "code": status.HTTP_404_NOT_FOUND,
-                        "message": "User not found."
+                    "examples": {
+                        "UserNotFound": {
+                            "value": {
+                                "code": status.HTTP_404_NOT_FOUND,
+                                "message": "User not found."
+                            }
+                        },
                     }
                 }
             }
@@ -84,9 +92,13 @@ async def signup(
             "description": "The user is not active.",
             "content": {
                 "application/json": {
-                    "exmpale": {
-                        "code": status.HTTP_400_BAD_REQUEST,
-                        "message": "User is not active."
+                    "examples": {
+                        "UserNotActive": {
+                            "value": {
+                                "code": status.HTTP_400_BAD_REQUEST,
+                                "message": "User is not active."
+                            }
+                        },
                     }
                 }
             }
@@ -95,9 +107,13 @@ async def signup(
             "description": "Could not validate credentials.",
             "content": {
                 "application/json": {
-                    "exmpale": {
-                        "code": status.HTTP_401_UNAUTHORIZED,
-                        "message": "Invalid credentials."
+                    "examples": {
+                        "InvalidCredentials": {
+                            "value": {
+                                "code": status.HTTP_401_UNAUTHORIZED,
+                                "message": "Invalid credentials."
+                            }
+                        },
                     }
                 }
             }
@@ -129,9 +145,13 @@ async def login(
             "description": "Logged out successfully.",
             "content": {
                 "application/json": {
-                    "exmpale": {
-                        "code": status.HTTP_200_OK,
-                        "message": "Logged out successfully."
+                    "examples": {
+                        "LoggedOutSuccessfully": {
+                            "value": {
+                                "code": status.HTTP_200_OK,
+                                "message": "Logged out successfully."
+                            }
+                        },
                     }
                 }
             }
@@ -139,8 +159,6 @@ async def login(
     }
 )
 async def logout(token: str = Depends(oauth2_scheme), redis: Redis = Depends(get_redis)):
-    # Add token to Redis blacklist with TTL (e.g., 30 minutes)
-    print(token)
     await redis.setex(f"blacklist:{token}", 600, "revoked")
     return {"message": "Logged out successfully"}
 
@@ -156,9 +174,13 @@ async def logout(token: str = Depends(oauth2_scheme), redis: Redis = Depends(get
             "description": "The user who requested the password reset was not found.",
             "content": {
                 "application/json": {
-                    "exmpale": {
-                        "code": status.HTTP_404_NOT_FOUND,
-                        "message": "User not found."
+                    "examples": {
+                        "UserNotFound": {
+                            "value": {
+                                "code": status.HTTP_404_NOT_FOUND,
+                                "message": "User not found."
+                            }
+                        },  
                     }
                 }
             }
@@ -167,9 +189,13 @@ async def logout(token: str = Depends(oauth2_scheme), redis: Redis = Depends(get
             "description": "The user who requested password reset is not active.",
             "content": {
                 "application/json": {
-                    "exmpale": {
-                        "code": status.HTTP_400_BAD_REQUEST,
-                        "message": "User is not active."
+                    "examples": {
+                        "UserNotActive": {
+                            "value": {
+                                "code": status.HTTP_400_BAD_REQUEST,
+                                "message": "User is not active."
+                            }
+                        },
                     }
                 }
             }
@@ -196,9 +222,13 @@ async def request_password_reset_otp(
             "description": "The password could not be reset due to OTP error or security reason.",
             "content": {
                 "application/json": {
-                    "exmpale": {
-                        "code": status.HTTP_401_UNAUTHORIZED,
-                        "message": "Password reset not allowed. Request a new OTP code and try again."
+                    "examples": {
+                        "PasswordResetNotAllowed": {
+                            "value": {
+                                "code": status.HTTP_401_UNAUTHORIZED,
+                                "message": "Password reset not allowed. Request a new OTP code and try again."
+                            }
+                        },
                     }
                 }
             }
@@ -207,9 +237,13 @@ async def request_password_reset_otp(
             "description": "The new password must match the confirmation password.",
             "content": {
                 "application/json": {
-                    "exmpale": {
-                        "code": status.HTTP_400_BAD_REQUEST,
-                        "message": "Passwords don't match."
+                    "examples": {
+                        "PasswordsDontMatch": {
+                            "value": {
+                                "code": status.HTTP_400_BAD_REQUEST,
+                                "message": "Passwords don't match."
+                            }
+                        },
                     }
                 }
             }
@@ -301,7 +335,6 @@ async def swaggerlogin(
     """This is for SwaggerUI authentication for testing purposes only. Don't use this endpoint if you want to login as a frontend, use the login endpoint instead."""
     login_data = Login(email=login_credentials.username, password=login_credentials.password)
     access_token, refresh_token = await auth_service.create_tokens_for_login(login_data)
-    print(access_token, refresh_token)
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,

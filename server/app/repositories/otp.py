@@ -36,9 +36,9 @@ class OTPRepository:
         """Returns the number of OTPs with this code. Used to maintain uniqueness when genrating new codes."""
         return self.db.execute(select(func.count()).select_from(OTP).where(OTP.code==code)).scalar()
        
-    async def create_otp(self, otp_data: OTPCreate) -> OTP:
+    async def create_otp(self, data: dict) -> OTP:
         """Inserts a new OTP to the database"""
-        db_otp = OTP(**otp_data.model_dump())
+        db_otp = OTP(**data)
         self.db.add(db_otp)
         self.db.commit()
         self.db.refresh(db_otp)

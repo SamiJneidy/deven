@@ -11,3 +11,4 @@ from .auth import (
 )
 from .otp import OTPCreate, OTPResponse, OTPVerificationRequest, OTPVerificationResponse
 from .user import UserCreate, UserUpdate, UserResponse
+from .company import CompanyCreate, CompanyUpdate, CompanyResponse

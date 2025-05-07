@@ -3,10 +3,11 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from typing import Annotated
 from redis.asyncio import Redis
+from .context import current_user
 from .config.settings import settings
 from .database.database import get_db
-from ..repositories import UserRepository, OTPRepository, AuthRepository 
-from ..services import UserService, OTPService, AuthService
+from ..repositories import UserRepository, OTPRepository, AuthRepository, CompanyRepository
+from ..services import UserService, OTPService, AuthService, CompanyService
 from ..schemas import UserResponse
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/authentication/swaggerlogin")
@@ -41,6 +42,16 @@ def get_user_service(
     """Returns user service dependency."""
     return UserService(user_repo, otp_service)
 
+# Company
+def get_company_repository(db: Annotated[Session, Depends(get_db)]) -> CompanyRepository:
+    return CompanyRepository(db)
+
+def get_company_service(
+    company_repo: Annotated[CompanyRepository, Depends(get_company_repository)]    
+) -> CompanyService:
+    """Returns company service dependency."""
+    return CompanyService(company_repo)
+
 
 # Auth
 def get_auth_repository(db: Annotated[Session, Depends(get_db)]) -> AuthRepository:
@@ -52,25 +63,18 @@ def get_auth_service(
     user_repo: Annotated[UserRepository, Depends(get_user_repository)],
     user_service: Annotated[UserService, Depends(get_user_service)],
     otp_service: Annotated[OTPService, Depends(get_otp_service)],
+    company_service: Annotated[CompanyService, Depends(get_company_service)],
 ) -> AuthService:
     """Returns auth service dependency."""
-    return AuthService(auth_repo, user_repo, user_service, otp_service)
+    return AuthService(auth_repo, user_repo, user_service, otp_service, company_service)
 
 # JWT
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)], 
     auth_service: Annotated[AuthService, Depends(get_auth_service)]
 ) -> UserResponse:
-    return await auth_service.get_user_from_token(token)
+    """Returns the current user from the token."""
+    user = await auth_service.get_user_from_token(token)
+    current_user.set(user)
+    return user
 
-# async def get_current_user(
-#     db: DBDep,
-#     token: str = Depends(security.oauth2_scheme)
-# ) -> User:
-#     """Validate JWT and return user"""
-#     user = security.verify_token(db, token)
-#     if not user:
-#         raise HTTPException(status.HTTP_401_UNAUTHORIZED)
-#     return user
-
-# CurrentUser = Annotated[User, Depends(get_current_user)]

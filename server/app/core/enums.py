@@ -1,6 +1,23 @@
 from enum import Enum
 
 
+class Gender(str, Enum):
+    MALE = "male"
+    FEMALE = "female"
+    OTHER = "other"
+
+class Country(str, Enum):
+    SYRIA = "Syria"
+    USA = "USA"
+
+class MartialStatus(str, Enum):
+    Single = "Single"
+    Married = "Married"
+
+class EmployeeStatus(str, Enum):
+    WORKING = "working"
+    RETIRED = "retired"
+
 class UserRole(str, Enum):
     USER = "user"                # Regular user (default)
     MODERATOR = "moderator"      # Manages content (e.g., delete posts)
@@ -14,7 +31,6 @@ class UserStatus(str, Enum):
     DISABLED = "disabled"        # Manual deactivation by admin (reversible)
     DELETED = "deleted"          # Soft-deleted (GDPR compliance; irreversible)
 
-
 class OTPStatus(str, Enum):
     PENDING = "pending"
     VERIFIED = "verified"
@@ -24,3 +40,21 @@ class OTPUsage(str, Enum):
     LOGIN = "login"
     PASSWORD_RESET = "password_reset"
     EMAIL_VERIFICATION = "email_verification"
+
+class BusinessType(str, Enum):
+    TECHNOLOGY = "technology"
+    FINANCE = "finance"
+    HEALTHCARE = "healthcare"
+    EDUCATION = "education"
+    MANUFACTURING = "manufacturing"
+    RETAIL = "retail"
+    TRANSPORTATION = "transportation"
+    REAL_ESTATE = "real_estate"
+    CONSTRUCTION = "construction"
+    HOSPITALITY = "hospitality"
+    ENERGY = "energy"
+    ENTERTAINMENT = "entertainment"
+    AGRICULTURE = "agriculture"
+    GOVERNMENT = "government"
+    CONSULTING = "consulting"
+    OTHER = "other"

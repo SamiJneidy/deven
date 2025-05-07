@@ -19,5 +19,10 @@ class UserUpdate(UserBase):
     pass
 
 class UserResponse(UserBase):
+    id: int
+    created_at: datetime
+    created_by: int | None
+    updated_at: datetime | None
+    updated_by: int | None
+    company_id: int
     model_config = ConfigDict(from_attributes=True)
-    pass

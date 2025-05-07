@@ -20,7 +20,7 @@ class UserService:
         if await self.user_repository.get_user_by_email(user_data.email):
             raise EmailAlreadyInUseError()
         user_data.password = hash_password(user_data.password)
-        db_user = await self.user_repository.create_user(user_data)
+        db_user = await self.user_repository.create_user(user_data.model_dump())
         return UserResponse.model_validate(db_user)
 
     async def verify_user(self, email: str) -> None:

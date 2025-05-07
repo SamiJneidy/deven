@@ -1,4 +1,4 @@
-from .auth import (
+from .authentication import (
     InvalidCredentialsError,
     UserNotActiveError,
     PasswordResetNotAllowedError,
@@ -19,3 +19,5 @@ from .otp import (
     SuspiciousOTPActivityError,
     OTPNotFoundError
 )
+
+from .company import CompanyNotFoundError
