@@ -10,7 +10,7 @@ from .....core.dependencies import (
 )
 
 router = APIRouter(
-    prefix="/work_type", 
+    prefix="/work-type", 
     tags=["Work Type"],
 )
 
