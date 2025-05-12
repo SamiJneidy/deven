@@ -4,9 +4,9 @@ import os
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
 
-from core.exceptions.handlers import base_exception_handler
-from core.exceptions.base import BaseAppException
-from api.v1 import router
+from .core.exceptions.handlers import base_exception_handler
+from .core.exceptions.base import BaseAppException
+from .api.v1 import router
 
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
