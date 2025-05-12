@@ -1,6 +1,6 @@
-from ....repositories import EmployeeRepository, WorkTypeRepository, JobTitleRepository
-from ....schemas import EmployeeCreate, EmployeeUpdate, EmployeeResponse
-from ....core.exceptions import EmployeeNotFound, PersonalEmailAlreadyInUseError, WorkEmailAlreadyInUseError
+from app.repositories import EmployeeRepository, WorkTypeRepository, JobTitleRepository
+from app.schemas import EmployeeCreate, EmployeeUpdate, EmployeeResponse
+from app.core.exceptions import EmployeeNotFound, PersonalEmailAlreadyInUseError, WorkEmailAlreadyInUseError
 
 class EmployeeService:
     def __init__(self, employee_repository: EmployeeRepository):

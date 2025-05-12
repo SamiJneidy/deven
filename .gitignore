@@ -2,3 +2,6 @@
 __pycache__
 .env
 passwords/
+x/
+test/
+convert_imports.py

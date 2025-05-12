@@ -1,6 +1,6 @@
-from ....repositories import WorkTypeRepository
-from ....schemas.hr import WorkTypeCreate, WorkTypeUpdate, WorkTypeResponse
-from ....core.exceptions.hr import WorkTypeNotFound
+from app.repositories import WorkTypeRepository
+from app.schemas.hr import WorkTypeCreate, WorkTypeUpdate, WorkTypeResponse
+from app.core.exceptions.hr import WorkTypeNotFound
 
 class WorkTypeService:
     def __init__(self, work_type_repository: WorkTypeRepository) -> None:

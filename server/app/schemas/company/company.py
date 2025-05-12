@@ -2,8 +2,8 @@ from pydantic import BaseModel, EmailStr, HttpUrl, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
 from uuid import UUID
-from ..common import AuditTimeMixin
-from ...core.enums import BusinessType
+from app.schemas.common import AuditTimeMixin
+from app.core.enums import BusinessType
 
 class CompanyBase(BaseModel):
     name: str = Field(..., example="Deven")

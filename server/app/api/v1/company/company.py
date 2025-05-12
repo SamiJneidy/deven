@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
-from ....schemas import SignleObjectResponse, CompanyCreate, CompanyUpdate, CompanyResponse
-from ....services import CompanyService
-from ....core.dependencies import (
+from app.schemas import SignleObjectResponse, CompanyCreate, CompanyUpdate, CompanyResponse
+from app.services import CompanyService
+from app.core.dependencies import (
     Annotated, 
     Depends, 
     get_company_service,

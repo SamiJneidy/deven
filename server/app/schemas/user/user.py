@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, StringConstraints, ConfigDict, Field
 from datetime import datetime
 from typing import Annotated
-from ...core.enums import UserRole, UserStatus
+from app.core.enums import UserRole, UserStatus
 
 class UserBase(BaseModel):
     email: EmailStr = Field(..., example="user@example.com")

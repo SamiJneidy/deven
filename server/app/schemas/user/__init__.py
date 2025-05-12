@@ -1,1 +1,1 @@
-from .user import UserCreate, UserResponse, UserUpdate
+from app.schemas.user.user import UserCreate, UserResponse, UserUpdate

@@ -1,8 +1,8 @@
 from pydantic import BaseModel, EmailStr, ConfigDict, Field
 from datetime import datetime, date
 from typing import Annotated
-from ...common import AuditTimeMixin, AuditByMixin, AuditMixin
-from ....core.enums import Gender, Country, MartialStatus, EmployeeStatus
+from app.schemas.common import AuditTimeMixin, AuditByMixin, AuditMixin
+from app.core.enums import Gender, Country, MartialStatus, EmployeeStatus
 
 class EmployeeBase(BaseModel):
 

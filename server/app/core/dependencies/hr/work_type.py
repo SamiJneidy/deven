@@ -1,9 +1,9 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from typing import Annotated
-from ...database.database import get_db
-from ....repositories import WorkTypeRepository
-from ....services import WorkTypeService
+from app.core.database.database import get_db
+from app.repositories import WorkTypeRepository
+from app.services import WorkTypeService
 
 def get_work_type_repository(db: Annotated[Session, Depends(get_db)]) -> WorkTypeRepository:
     """Returns work type repository dependency"""

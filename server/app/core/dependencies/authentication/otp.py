@@ -1,9 +1,9 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from typing import Annotated
-from ...database.database import get_db
-from ....repositories import OTPRepository
-from ....services import OTPService
+from app.core.database.database import get_db
+from app.repositories import OTPRepository
+from app.services import OTPService
 
 def get_otp_repository(db: Annotated[Session, Depends(get_db)]) -> OTPRepository:
     """Returns otp repository dependency"""

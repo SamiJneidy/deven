@@ -1,4 +1,4 @@
-from .authentication import (
+from app.schemas.authentication.authentication import (
     TokenPayload,
     TokenResponse,
     SignUp,
@@ -8,4 +8,4 @@ from .authentication import (
     PasswordResetOTPRequest,
     PasswordResetOTPResponse,
 )
-from .otp import OTPCreate, OTPResponse, OTPVerificationRequest, OTPVerificationResponse
+from app.schemas.authentication.otp import OTPCreate, OTPResponse, OTPVerificationRequest, OTPVerificationResponse

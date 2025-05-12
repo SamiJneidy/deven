@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, Date, Time, DateTime, ForeignKey, Boolean, Enum as SQLEnum, func
 from sqlalchemy.orm import relationship
-from ....core.database import Base
-from ....core.enums import EmployeeStatus, Gender, Country, MartialStatus
-from ...base import BaseModel
+from app.core.database import Base
+from app.core.enums import EmployeeStatus, Gender, Country, MartialStatus
+from app.models.base import BaseModel
 
 class Employee(Base, BaseModel):
     __tablename__ = "employees"

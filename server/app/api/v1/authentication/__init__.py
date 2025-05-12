@@ -1,1 +1,1 @@
-from .authentication import router as authentication_router
+from app.api.v1.authentication.authentication import router as authentication_router

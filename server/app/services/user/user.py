@@ -1,9 +1,9 @@
-from ..authentication import OTPService
-from ...repositories import OTPRepository, UserRepository
-from ...schemas import UserCreate, UserResponse
-from ...core.security.passwords import hash_password
-from ...core.exceptions import EmailAlreadyInUseError, UserNotFoundError
-from ...core.enums import UserRole, UserStatus, OTPStatus, OTPUsage
+from app.services.authentication import OTPService
+from app.repositories import OTPRepository, UserRepository
+from app.schemas import UserCreate, UserResponse
+from app.core.security.passwords import hash_password
+from app.core.exceptions import EmailAlreadyInUseError, UserNotFoundError
+from app.core.enums import UserRole, UserStatus, OTPStatus, OTPUsage
 
 class UserService:
     def __init__(self, user_repository: UserRepository, otp_service: OTPService):

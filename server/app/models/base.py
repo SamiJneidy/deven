@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DateTime, Integer, ForeignKey, func
-from ..core.database.database import Base
-from ..core.context import current_user, company
+from app.core.database.database import Base
+from app.core.context import current_user, company
 
 class AuditByMixin:
     """Adds created_by and updated_by columns to a model."""

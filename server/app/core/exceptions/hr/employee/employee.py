@@ -1,5 +1,5 @@
 from fastapi import status
-from ...base import BaseAppException
+from app.core.exceptions.base import BaseAppException
 
 class EmployeeNotFound(BaseAppException):
     """Raised when the employee is not found."""

@@ -1,2 +1,2 @@
-from .authentication import AuthenticationRepository
-from .otp import OTPRepository
+from app.repositories.authentication.authentication import AuthenticationRepository
+from app.repositories.authentication.otp import OTPRepository

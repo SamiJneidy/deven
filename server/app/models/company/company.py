@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String, Integer, Text, Enum as SQLEnum, DateTime, ForeignKey, func
 from sqlalchemy.orm import relationship
-from ...core.database import Base
-from ...core.enums import BusinessType
-from ..base import AuditTimeMixin, AuditMixin
+from app.core.database import Base
+from app.core.enums import BusinessType
+from app.models.base import AuditTimeMixin, AuditMixin
 
 class Company(Base, AuditTimeMixin):
     __tablename__ = "companies"

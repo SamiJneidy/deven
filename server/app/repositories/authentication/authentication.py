@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert, update, delete
-from ...models import User
+from app.models import User
 
 class AuthenticationRepository:
     def __init__(self, db: Session):

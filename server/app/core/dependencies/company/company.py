@@ -1,9 +1,9 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from typing import Annotated
-from ...database.database import get_db
-from ....repositories import CompanyRepository
-from ....services import CompanyService
+from app.core.database.database import get_db
+from app.repositories import CompanyRepository
+from app.services import CompanyService
 
 # Company
 def get_company_repository(db: Annotated[Session, Depends(get_db)]) -> CompanyRepository:

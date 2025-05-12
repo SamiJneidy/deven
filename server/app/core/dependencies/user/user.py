@@ -1,10 +1,10 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from typing import Annotated
-from ...database.database import get_db
-from ....repositories import UserRepository
-from ....services import UserService, OTPService
-from ..authentication import get_otp_service
+from app.core.database.database import get_db
+from app.repositories import UserRepository
+from app.services import UserService, OTPService
+from app.core.dependencies.authentication import get_otp_service
 
 def get_user_repository(db: Annotated[Session, Depends(get_db)]) -> UserRepository:
     """Returns user repository dependency."""

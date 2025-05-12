@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert, update, delete
-from ....models import Employee, WorkType, JobTitle
-from ....core.enums import BusinessType
+from app.models import Employee, WorkType, JobTitle
+from app.core.enums import BusinessType
 
 class EmployeeRepository:
     def __init__(self, db: Session) -> None:

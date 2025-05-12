@@ -1,1 +1,1 @@
-from .company import CompanyRepository
+from app.repositories.company.company import CompanyRepository

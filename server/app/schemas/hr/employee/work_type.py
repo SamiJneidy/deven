@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict, Field
-from ...common import AuditMixin
+from app.schemas.common import AuditMixin
 
 class WorkTypeBase(BaseModel):
     name: str = Field(..., min_length=1, example="Fulltime")

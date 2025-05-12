@@ -1,1 +1,1 @@
-from .otp import OTP
+from app.models.authentication.otp import OTP

@@ -1,13 +1,13 @@
 import jwt
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
-from .otp import OTPService
-from ..user import UserService
-from ..company import CompanyService
-from ...repositories import AuthenticationRepository, UserRepository
-from ...core.security.passwords import hash_password, verify_password
-from ...core.config.settings import settings
-from ...schemas import (
+from app.services.authentication.otp import OTPService
+from app.services.user import UserService
+from app.services.company import CompanyService
+from app.repositories import AuthenticationRepository, UserRepository
+from app.core.security.passwords import hash_password, verify_password
+from app.core.config.settings import settings
+from app.schemas import (
     TokenPayload,
     SignUp, 
     Login,
@@ -21,7 +21,7 @@ from ...schemas import (
     CompanyCreate,
     CompanyResponse,
 )
-from ...core.exceptions import (
+from app.core.exceptions import (
     InvalidCredentialsError,
     EmailAlreadyInUseError,
     UserNotActiveError, 
@@ -31,7 +31,7 @@ from ...core.exceptions import (
     OTPNotFoundError,
     InvalidTokenError,
 )
-from ...core.enums import UserRole, UserStatus, OTPStatus, OTPUsage
+from app.core.enums import UserRole, UserStatus, OTPStatus, OTPUsage
 
 class AuthenticationService:
     def __init__(self, 

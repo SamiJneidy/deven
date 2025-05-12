@@ -1,4 +1,4 @@
-from ..base import BaseAppException
+from app.core.exceptions.base import BaseAppException
 from fastapi import status
 
 class UserNotFoundError(BaseAppException):

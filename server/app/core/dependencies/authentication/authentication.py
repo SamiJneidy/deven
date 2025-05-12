@@ -3,15 +3,15 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from typing import Annotated
 from redis.asyncio import Redis
-from ...context import current_user
-from ...config.settings import settings
-from ...database.database import get_db
-from ....repositories import UserRepository, AuthenticationRepository
-from ....services import OTPService, AuthenticationService, UserService, CompanyService
-from ....schemas import UserResponse
-from ..user import get_user_service, get_user_repository
-from ..company import get_company_service
-from .otp import get_otp_service
+from app.core.context import current_user
+from app.core.config.settings import settings
+from app.core.database.database import get_db
+from app.repositories import UserRepository, AuthenticationRepository
+from app.services import OTPService, AuthenticationService, UserService, CompanyService
+from app.schemas import UserResponse
+from app.core.dependencies.user import get_user_service, get_user_repository
+from app.core.dependencies.company import get_company_service
+from app.core.dependencies.authentication.otp import get_otp_service
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/authentication/swaggerlogin")
 

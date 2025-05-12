@@ -1,1 +1,1 @@
-from .employee import WorkTypeRepository
+from app.repositories.hr.employee import WorkTypeRepository

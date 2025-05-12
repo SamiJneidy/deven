@@ -1,5 +1,5 @@
-from .common import SignleObjectResponse, ObjectListResponse
-from .authentication import (
+from app.schemas.common import SignleObjectResponse, ObjectListResponse
+from app.schemas.authentication import (
     TokenPayload,
     TokenResponse,
     SignUp,
@@ -10,7 +10,7 @@ from .authentication import (
     PasswordResetOTPResponse,
     OTPCreate, OTPResponse, OTPVerificationRequest, OTPVerificationResponse
 )
-from .user import UserCreate, UserUpdate, UserResponse
-from .company import CompanyCreate, CompanyUpdate, CompanyResponse
-from .hr.employee.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate
-from .hr.employee.work_type import WorkTypeCreate, WorkTypeResponse, WorkTypeUpdate
+from app.schemas.user import UserCreate, UserUpdate, UserResponse
+from app.schemas.company import CompanyCreate, CompanyUpdate, CompanyResponse
+from app.schemas.hr.employee.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate
+from app.schemas.hr.employee.work_type import WorkTypeCreate, WorkTypeResponse, WorkTypeUpdate

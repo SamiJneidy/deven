@@ -1,1 +1,1 @@
-from .user import get_user_repository, get_user_service
+from app.core.dependencies.user.user import get_user_repository, get_user_service

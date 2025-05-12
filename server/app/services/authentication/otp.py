@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta, timezone
-from ...core.enums import OTPStatus, OTPUsage
-from ...repositories import OTPRepository
-from ...core.exceptions import InvalidOTPError, ExpiredOTPError, OTPAlreadyUsedError, OTPNotFoundError
-from ...core.config.settings import settings
-from ...core.utilities.mail import send_email 
-from ...schemas import OTPCreate, OTPResponse, OTPVerificationRequest, OTPVerificationResponse
+from app.core.enums import OTPStatus, OTPUsage
+from app.repositories import OTPRepository
+from app.core.exceptions import InvalidOTPError, ExpiredOTPError, OTPAlreadyUsedError, OTPNotFoundError
+from app.core.config.settings import settings
+from app.core.utilities.mail import send_email 
+from app.schemas import OTPCreate, OTPResponse, OTPVerificationRequest, OTPVerificationResponse
 
 class OTPService:
     def __init__(self, otp_repository: OTPRepository):

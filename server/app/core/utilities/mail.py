@@ -1,6 +1,6 @@
 from fastapi_mail import FastMail, MessageSchema
 from pydantic import EmailStr
-from ..config.mail_settings import connection_config
+from app.core.config.mail_settings import connection_config
 
 fastmail = FastMail(connection_config)
 

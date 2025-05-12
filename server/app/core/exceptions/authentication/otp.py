@@ -1,5 +1,5 @@
 from fastapi import status
-from ..base import BaseAppException, ResourceNotFoundError
+from app.core.exceptions.base import BaseAppException, ResourceNotFoundError
 
 class InvalidOTPError(BaseAppException):
     """Raised when the OTP code is invalid."""

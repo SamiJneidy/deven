@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, Enum as SQLEnum, func
 from sqlalchemy.orm import relationship
-from ...core.database import Base
-from ...core.enums import OTPStatus, OTPUsage
-from ..base import AuditTimeMixin
+from app.core.database import Base
+from app.core.enums import OTPStatus, OTPUsage
+from app.models.base import AuditTimeMixin
 
 class OTP(Base, AuditTimeMixin):
     __tablename__ = "otps"

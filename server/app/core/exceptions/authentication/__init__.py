@@ -1,4 +1,4 @@
-from .authentication import (
+from app.core.exceptions.authentication.authentication import (
     InvalidCredentialsError,
     UserNotActiveError,
     PasswordResetNotAllowedError,
@@ -7,7 +7,7 @@ from .authentication import (
     InvalidTokenError,
 )
 
-from .otp import (
+from app.core.exceptions.authentication.otp import (
     InvalidOTPError,
     ExpiredOTPError,
     OTPAlreadyUsedError,

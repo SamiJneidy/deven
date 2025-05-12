@@ -1,6 +1,6 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from .settings import settings
+from app.core.config.settings import settings
 
 connection_config = ConnectionConfig(
     MAIL_USERNAME=settings.MAIL_USERNAME,

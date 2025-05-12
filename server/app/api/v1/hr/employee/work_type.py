@@ -1,8 +1,8 @@
 from fastapi import APIRouter, status
-from .....schemas.user import UserResponse
-from .....schemas import SignleObjectResponse, ObjectListResponse, WorkTypeCreate, WorkTypeUpdate, WorkTypeResponse
-from .....services import WorkTypeService
-from .....core.dependencies import (
+from app.schemas.user import UserResponse
+from app.schemas import SignleObjectResponse, ObjectListResponse, WorkTypeCreate, WorkTypeUpdate, WorkTypeResponse
+from app.services import WorkTypeService
+from app.core.dependencies import (
     Annotated, 
     Depends, 
     get_work_type_service,

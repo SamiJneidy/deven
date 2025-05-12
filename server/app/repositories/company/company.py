@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert, update, delete
-from ...models import Company
+from app.models import Company
 
 class CompanyRepository:
     def __init__(self, db: Session) -> None:

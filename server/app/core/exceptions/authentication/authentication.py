@@ -1,5 +1,5 @@
 from fastapi import status
-from ..base import BaseAppException
+from app.core.exceptions.base import BaseAppException
 
 class UserNotActiveError(BaseAppException):
     """Raised when the user is not active."""

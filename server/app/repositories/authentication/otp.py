@@ -2,10 +2,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select, insert, delete, update, func
 from datetime import datetime, timedelta, timezone
 import secrets
-from ...models import OTP
-from ...core.enums import OTPUsage, OTPStatus
-from ...core.config.settings import settings
-from ...schemas import OTPCreate
+from app.models import OTP
+from app.core.enums import OTPUsage, OTPStatus
+from app.core.config.settings import settings
+from app.schemas import OTPCreate
 
 class OTPRepository:
     def __init__(self, db: Session):

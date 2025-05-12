@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from redis.asyncio import Redis
-from ....schemas import (
+from app.schemas import (
     SignleObjectResponse,
     OTPResponse, 
     OTPVerificationRequest, 
@@ -14,8 +14,8 @@ from ....schemas import (
     PasswordResetOTPRequest,
     PasswordResetOTPResponse,
 )
-from ....services import UserService, OTPService, AuthenticationService
-from ....core.dependencies import (
+from app.services import UserService, OTPService, AuthenticationService
+from app.core.dependencies import (
     Annotated,
     Depends, 
     get_authentication_service, 
@@ -24,8 +24,8 @@ from ....core.dependencies import (
     get_redis,
     oauth2_scheme
 )
-from ....core.enums import OTPUsage
-from ....core.config.settings import settings
+from app.core.enums import OTPUsage
+from app.core.config.settings import settings
 
 router = APIRouter(
     prefix="/authentication", 

@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert, update, delete
-from ...models import User
-from ...schemas import UserCreate
-from ...core.enums import UserRole, UserStatus
+from app.models import User
+from app.schemas import UserCreate
+from app.core.enums import UserRole, UserStatus
 
 class UserRepository:
     def __init__(self, db: Session):

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, StringConstraints, ConfigDict, Field
 from datetime import datetime
 from typing import Annotated
-from ...core.enums import OTPStatus, OTPUsage
+from app.core.enums import OTPStatus, OTPUsage
 
 class OTPBase(BaseModel):
     email: EmailStr 

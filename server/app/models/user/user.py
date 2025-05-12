@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum as SQLEnum, func
 from sqlalchemy.orm import relationship
-from ...core.database.database import Base
-from ...core.enums import UserRole, UserStatus
-from ..base import BaseModel
+from app.core.database.database import Base
+from app.core.enums import UserRole, UserStatus
+from app.models.base import BaseModel
 
 class User(Base, BaseModel):
     __tablename__ = "users"
