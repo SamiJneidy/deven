@@ -4,8 +4,8 @@ from ..core.context import current_user, company
 
 class AuditByMixin:
     """Adds created_by and updated_by columns to a model."""
-    created_by = Column(Integer, ForeignKey('users.id'), default=lambda: current_user.get().id, nullable=True)
-    updated_by = Column(Integer, ForeignKey('users.id'), onupdate=lambda: current_user.get().id, nullable=True)
+    created_by = Column(Integer, ForeignKey('users.id'), default=lambda: current_user.get().id if current_user.get() else None, nullable=True)
+    updated_by = Column(Integer, ForeignKey('users.id'), onupdate=lambda: current_user.get().id if current_user.get() else None, nullable=True)
 
 class AuditTimeMixin:
     """Adds created_at and updated_at columns to a model."""

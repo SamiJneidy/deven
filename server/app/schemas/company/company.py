@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr, HttpUrl, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
 from uuid import UUID
+from ..common import AuditTimeMixin
 from ...core.enums import BusinessType
 
 class CompanyBase(BaseModel):
@@ -25,9 +26,7 @@ class CompanyUpdate(CompanyBase):
     # name: str | None = Field(default=None, example="Deven")
     pass
 
-class CompanyResponse(CompanyBase):
+class CompanyResponse(CompanyBase, AuditTimeMixin):
     id: int
-    created_at: datetime
-    updated_at: datetime | None
 
     model_config = ConfigDict(from_attributes=True)

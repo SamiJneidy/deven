@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .authenctication import authentication_router
+from .authentication import authentication_router
 from .company import company_router
 from .hr import work_type_router
 

@@ -1,11 +1,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert, update, delete
 from ...models import Company
-from ...schemas import CompanyCreate, CompanyUpdate
-from ...core.enums import BusinessType
 
 class CompanyRepository:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session) -> None:
         self.db = db
 
     async def get_company_by_id(self, id: int) -> Company | None:
