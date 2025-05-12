@@ -9,10 +9,10 @@ from alembic import context
 # Import project objects
 from app.core.database.database import Base
 from app.models.base import AuditByMixin, AuditTimeMixin, AuditMixin
-from app.models.user import User
-from app.models.otp import OTP
-from app.models.hr import JobTitle, Department, Shift, WorkType, Employee
-from app.models.company import Company, CompanyLocation
+from app.models.user.user import User
+from app.models.authentication.otp import OTP
+from app.models.hr.employee import JobTitle, WorkType, Employee
+from app.models.company import Company, Location, Department
 from app.core.config.settings import settings
 
 # this is the Alembic Config object, which provides

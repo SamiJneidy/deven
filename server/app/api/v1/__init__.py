@@ -1,6 +1,9 @@
 from fastapi import APIRouter
-from .authentication import router as auth_router
-from .company import router as company_router
+from .authenctication import authentication_router
+from .company import company_router
+from .hr import work_type_router
+
 router = APIRouter()
-router.include_router(auth_router)
+router.include_router(authentication_router)
 router.include_router(company_router)
+router.include_router(work_type_router)

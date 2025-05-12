@@ -1,4 +1,4 @@
-from .authentication import (
+from .authentication.authentication import (
     InvalidCredentialsError,
     UserNotActiveError,
     PasswordResetNotAllowedError,
@@ -7,11 +7,11 @@ from .authentication import (
     InvalidTokenError,
 )
 
-from .users import (
+from .user.users import (
     UserNotFoundError,
 )
 
-from .otp import (
+from .authentication.otp import (
     InvalidOTPError,
     ExpiredOTPError,
     OTPAlreadyUsedError,
@@ -20,4 +20,10 @@ from .otp import (
     OTPNotFoundError
 )
 
-from .company import CompanyNotFoundError
+from .company.company import CompanyNotFoundError
+
+from .hr import (
+    EmployeeNotFound,
+    PersonalEmailAlreadyInUseError,
+    WorkEmailAlreadyInUseError,
+)

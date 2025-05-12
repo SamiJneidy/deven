@@ -1,4 +1,4 @@
-from .user import User
-from .otp import OTP
-from .company import Company
-from .hr import JobTitle, Department, Shift, WorkType, Employee
+from .user.user import User
+from .authentication.otp import OTP
+from .company.company import Company
+from .hr.employee import JobTitle, WorkType, Employee
