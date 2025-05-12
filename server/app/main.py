@@ -3,12 +3,13 @@ import sys
 import os
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
+
+from core.exceptions.handlers import base_exception_handler
+from core.exceptions.base import BaseAppException
+from api.v1 import router
+
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-from app.core.exceptions.handlers import base_exception_handler
-from app.core.exceptions.base import BaseAppException
-from app.api.v1 import router
-
 
 app = FastAPI()
 app.include_router(router, prefix="/api/v1")
