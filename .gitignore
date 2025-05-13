@@ -2,6 +2,7 @@
 __pycache__
 .env
 passwords/
+passwords.zip
 x/
 test/
 convert_imports.py
