@@ -1,4 +1,4 @@
-from app.schemas.common import SignleObjectResponse, ObjectListResponse
+from app.schemas.common import SignleObjectResponse, ObjectListResponse, PaginationResponse
 from app.schemas.authentication import (
     TokenPayload,
     TokenResponse,

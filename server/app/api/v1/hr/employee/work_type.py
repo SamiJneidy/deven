@@ -1,6 +1,7 @@
-from fastapi import APIRouter, status
+from math import ceil
+from fastapi import APIRouter, status, Query
 from app.schemas.user import UserResponse
-from app.schemas import SignleObjectResponse, ObjectListResponse, WorkTypeCreate, WorkTypeUpdate, WorkTypeResponse
+from app.schemas import SignleObjectResponse, PaginationResponse, WorkTypeCreate, WorkTypeUpdate, WorkTypeResponse
 from app.services import WorkTypeService
 from app.core.dependencies import (
     Annotated, 
@@ -17,7 +18,7 @@ router = APIRouter(
 
 @router.get(
     path="/", 
-    response_model=ObjectListResponse[WorkTypeResponse],
+    response_model=PaginationResponse[WorkTypeResponse],
     responses={
         status.HTTP_200_OK: {
             "description": "The work types has been returned successfully."
@@ -27,10 +28,21 @@ router = APIRouter(
 async def get_work_types(
     work_type_service: Annotated[WorkTypeService, Depends(get_work_type_service)],
     current_user: Annotated[UserResponse, Depends(get_current_user)],
-) -> ObjectListResponse[WorkTypeResponse]:
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1),
+) -> PaginationResponse[WorkTypeResponse]:
     """Get all work types.""" 
-    data = await work_type_service.get_work_types()
-    return ObjectListResponse[WorkTypeResponse](data=data)
+    skip = (page - 1) * limit
+    data = await work_type_service.get_work_types(skip, limit)
+    rows = len(data)
+    pages = ceil(rows / limit)
+    return PaginationResponse[WorkTypeResponse](
+        data=data,
+        total_rows=len(data),
+        total_pages=pages,
+        current_page=page,
+        limit=limit
+    )
 
 
 @router.get(

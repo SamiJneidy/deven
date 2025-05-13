@@ -9,8 +9,8 @@ class WorkTypeRepository:
     async def get_work_type_by_id(self, id: int) -> WorkType | None:
         return self.db.query(WorkType).filter(WorkType.id == id).first()
 
-    async def get_work_types(self) -> list[WorkType]:
-        return self.db.query(WorkType).all()
+    async def get_work_types(self, skip: int, limit: int) -> list[WorkType]:
+        return self.db.query(WorkType).offset(skip).limit(limit).all()
 
     async def create_work_type(self, data: dict) -> WorkType:
         db_work_type = WorkType(**data)

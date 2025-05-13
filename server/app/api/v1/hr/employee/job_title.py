@@ -1,6 +1,7 @@
-from fastapi import APIRouter, status
+from math import ceil
+from fastapi import APIRouter, status, Query
 from app.schemas.user import UserResponse
-from app.schemas import SignleObjectResponse, ObjectListResponse, JobTitleCreate, JobTitleUpdate, JobTitleResponse
+from app.schemas import SignleObjectResponse, PaginationResponse, JobTitleCreate, JobTitleUpdate, JobTitleResponse
 from app.services import JobTitleService
 from app.core.dependencies import (
     Annotated, 
@@ -17,7 +18,7 @@ router = APIRouter(
 
 @router.get(
     path="/", 
-    response_model=ObjectListResponse[JobTitleResponse],
+    response_model=PaginationResponse[JobTitleResponse],
     responses={
         status.HTTP_200_OK: {
             "description": "The job titles has been returned successfully."
@@ -27,10 +28,21 @@ router = APIRouter(
 async def get_job_titles(
     job_title_service: Annotated[JobTitleService, Depends(get_job_title_service)],
     current_user: Annotated[UserResponse, Depends(get_current_user)],
-) -> ObjectListResponse[JobTitleResponse]:
-    """Get all job titles.""" 
-    data = await job_title_service.get_job_titles()
-    return ObjectListResponse[JobTitleResponse](data=data)
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1),
+) -> PaginationResponse[JobTitleResponse]:
+    """Get all job titles."""
+    skip = (page - 1) * limit
+    data = await job_title_service.get_job_titles(skip, limit)
+    rows = len(data)
+    pages = ceil(rows / limit)
+    return PaginationResponse[JobTitleResponse](
+        data=data,
+        total_rows=len(data),
+        total_pages=pages,
+        current_page=page,
+        limit=limit
+    )
 
 
 @router.get(

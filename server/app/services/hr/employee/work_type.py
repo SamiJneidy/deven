@@ -12,8 +12,8 @@ class WorkTypeService:
             raise WorkTypeNotFound()
         return WorkTypeResponse.model_validate(db_work_type)
 
-    async def get_work_types(self) -> list[WorkTypeResponse]:
-        db_work_types = await self.work_type_repository.get_work_types()
+    async def get_work_types(self, skip: int, limit: int) -> list[WorkTypeResponse]:
+        db_work_types = await self.work_type_repository.get_work_types(skip, limit)
         work_types = [WorkTypeResponse.model_validate(db_work_type) for db_work_type in db_work_types]
         return work_types
 

@@ -12,8 +12,8 @@ class JobTitleService:
             raise JobTitleNotFound()
         return JobTitleResponse.model_validate(db_job_title)
 
-    async def get_job_titles(self) -> list[JobTitleResponse]:
-        db_job_titles = await self.job_title_repository.get_job_titles()
+    async def get_job_titles(self, skip: int, limit: int) -> list[JobTitleResponse]:
+        db_job_titles = await self.job_title_repository.get_job_titles(skip, limit)
         job_titles = [JobTitleResponse.model_validate(db_job_title) for db_job_title in db_job_titles]
         return job_titles
 
