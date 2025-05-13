@@ -13,6 +13,6 @@
         }
     ],
     "env": {
-        "PYTHONPATH": "server/app"
+        "PYTHONPATH": "server"
     }
 }
