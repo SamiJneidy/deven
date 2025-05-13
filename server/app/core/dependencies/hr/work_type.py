@@ -9,6 +9,6 @@ def get_work_type_repository(db: Annotated[Session, Depends(get_db)]) -> WorkTyp
     """Returns work type repository dependency"""
     return WorkTypeRepository(db)
 
-def get_work_type_service(otp_repo: Annotated[WorkTypeRepository, Depends(get_work_type_repository)]) -> WorkTypeService:
+def get_work_type_service(work_type_repo: Annotated[WorkTypeRepository, Depends(get_work_type_repository)]) -> WorkTypeService:
     """Returns work type service dependency"""
-    return WorkTypeService(otp_repo)
+    return WorkTypeService(work_type_repo)

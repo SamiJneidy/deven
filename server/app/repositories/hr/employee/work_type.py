@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, insert, update, delete
-from app.models import WorkType, WorkType, JobTitle
+from app.models import WorkType
 
 class WorkTypeRepository:
     def __init__(self, db: Session) -> None:
