@@ -1,6 +1,6 @@
 from app.repositories import CompanyRepository
 from app.schemas import CompanyCreate, CompanyUpdate, CompanyResponse
-from app.core.exceptions import CompanyNotFoundError
+from app.core.exceptions import CompanyNotFoundException
 
 
 class CompanyService:
@@ -10,7 +10,7 @@ class CompanyService:
     async def get_company_by_id(self, id: int) -> CompanyResponse:
         db_company = await self.company_repository.get_company_by_id(id)
         if not db_company:
-            raise CompanyNotFoundError()
+            raise CompanyNotFoundException()
         return CompanyResponse.model_validate(db_company)
 
     async def create_company(self, company_data: CompanyCreate) -> CompanyResponse:
@@ -25,7 +25,7 @@ class CompanyService:
     async def update_company(self, id: int, company_data: CompanyUpdate) -> CompanyResponse:
         db_company = await self.company_repository.update_company(id, company_data.model_dump())
         if not db_company:
-            raise CompanyNotFoundError()
+            raise CompanyNotFoundException()
         return CompanyResponse.model_validate(db_company) 
 
     async def delete_company(self, id: int) -> None:

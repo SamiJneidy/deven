@@ -1,1 +1,2 @@
-from app.core.exceptions.company.company import CompanyNotFoundError
+from app.core.exceptions.company.company import CompanyNotFoundException
+from app.core.exceptions.company.department import DepartmentNotFoundException

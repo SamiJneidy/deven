@@ -1,5 +1,4 @@
 from app.services.authentication import AuthenticationService, OTPService
-from app.services.user.user import UserService
-from app.services.company.company import CompanyService
-from app.services.hr.employee.work_type import WorkTypeService
-from app.services.hr.employee.job_title import JobTitleService
+from app.services.user import UserService
+from app.services.company import CompanyService, DepartmentService
+from app.services.hr.employee import WorkTypeService, JobTitleService

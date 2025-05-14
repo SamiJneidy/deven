@@ -1,17 +1,17 @@
 from app.core.exceptions.authentication.authentication import (
-    InvalidCredentialsError,
-    UserNotActiveError,
-    PasswordResetNotAllowedError,
-    PasswordsDontMatchError,
-    EmailAlreadyInUseError,
-    InvalidTokenError,
+    InvalidCredentialsException,
+    UserNotActiveException,
+    PasswordResetNotAllowedException,
+    PasswordsDontMatchException,
+    EmailAlreadyInUseException,
+    InvalidTokenException,
 )
 
 from app.core.exceptions.authentication.otp import (
-    InvalidOTPError,
-    ExpiredOTPError,
-    OTPAlreadyUsedError,
-    MultipleOTPsDetectedError,
-    SuspiciousOTPActivityError,
-    OTPNotFoundError
+    InvalidOTPException,
+    ExpiredOTPException,
+    OTPAlreadyUsedException,
+    MultipleOTPsDetectedException,
+    SuspiciousOTPActivityException,
+    OTPNotFoundException
 )

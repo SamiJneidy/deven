@@ -6,13 +6,13 @@ class BaseAppException(Exception):
         self.message = message
         self.status_code = status_code
 
-class ResourceAlreadyInUseError(BaseAppException):
+class ResourceAlreadyInUseException(BaseAppException):
     """Raised when trying to register a resource that's already in use."""
     def __init__(self, resource_name: str = "Resource", message: str = None):
         message = message or f"{resource_name} already in use."
         super().__init__(message, status.HTTP_409_CONFLICT)
 
-class ResourceNotFoundError(BaseAppException):
+class ResourceNotFoundException(BaseAppException):
     """Raised when trying to access a resource that doesn't exist."""
     def __init__(self, resource_name: str = "Resource", message: str = None):
         message = message or f"{resource_name} not found."

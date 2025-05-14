@@ -26,7 +26,7 @@ class Employee(Base, BaseModel):
     emergency_email = Column(String, nullable=True)
     # Job info
     job_title_id = Column(Integer, ForeignKey('job_titles.id'), nullable=False)
-    department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
+    department_id = Column(Integer, ForeignKey('departments.id'), nullable=False)
     # shift_id = Column(Integer, ForeignKey('shifts.id'), nullable=True)
     work_type_id = Column(Integer, ForeignKey('work_types.id'), nullable=False)
     reporting_manager_id = Column(Integer, ForeignKey('employees.id'), nullable=True)
@@ -39,7 +39,7 @@ class Employee(Base, BaseModel):
 
     job_title = relationship("JobTitle", foreign_keys=[job_title_id], back_populates="employees")
     department = relationship("Department", foreign_keys=[department_id], remote_side="Department.id", back_populates="employees")
-    managed_departments = relationship("Department", foreign_keys="[Department.manager_id]", back_populates="manager")
+    # managed_departments = relationship("Department", foreign_keys="[Department.manager_id]", back_populates="manager")
     # shift = relationship("Shift", foreign_keys=[shift_id], back_populates="employees")
     work_type = relationship("WorkType", foreign_keys=[work_type_id], back_populates="employees")
     reporting_manager = relationship("Employee", foreign_keys=[reporting_manager_id], remote_side=[id], back_populates="subordinates")

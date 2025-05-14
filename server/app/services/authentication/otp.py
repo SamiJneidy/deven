@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from app.core.enums import OTPStatus, OTPUsage
 from app.repositories import OTPRepository
-from app.core.exceptions import InvalidOTPError, ExpiredOTPError, OTPAlreadyUsedError, OTPNotFoundError
+from app.core.exceptions import InvalidOTPException, ExpiredOTPException, OTPAlreadyUsedException, OTPNotFoundException
 from app.core.config.settings import settings
 from app.core.utilities.mail import send_email 
 from app.schemas import OTPCreate, OTPResponse, OTPVerificationRequest, OTPVerificationResponse
@@ -13,13 +13,13 @@ class OTPService:
     async def get_otp_by_code(self, code: str) -> OTPResponse:
         db_otp = await self.otp_repository.get_otp_by_code(code)
         if db_otp is None:
-            raise OTPNotFoundError()
+            raise OTPNotFoundException()
         return OTPResponse.model_validate(db_otp)
 
     async def get_otp_by_email(self, email: str, usage: OTPUsage) -> OTPResponse:
         db_otp = await self.otp_repository.get_otp_by_email(email, usage)
         if db_otp is None:
-            raise OTPNotFoundError()
+            raise OTPNotFoundException()
         return OTPResponse.model_validate(db_otp)
 
     async def create_email_verification_otp(self, email: str) -> OTPResponse:
@@ -72,7 +72,7 @@ class OTPService:
             status=status, 
             expires_at=expires_at
         )
-        db_otp = await self.otp_repository.create_otp(otp_data.model_dmp())
+        db_otp = await self.otp_repository.create_otp(otp_data.model_dump())
         await self.send_otp_for_password_reset(email, code)
         return OTPResponse.model_validate(db_otp)
     
@@ -86,11 +86,11 @@ class OTPService:
     async def verify_otp(self, otp_verification_data: OTPVerificationRequest) -> OTPVerificationResponse:
         db_otp = await self.otp_repository.get_otp_by_code(otp_verification_data.code)
         if db_otp is None:
-            raise InvalidOTPError()
+            raise InvalidOTPException()
         if await self.otp_expired(otp_verification_data.code):
-            raise ExpiredOTPError()
+            raise ExpiredOTPException()
         if db_otp.status == OTPStatus.EXPIRED or db_otp.status == OTPStatus.VERIFIED:
-            raise OTPAlreadyUsedError()
+            raise OTPAlreadyUsedException()
         
         await self.otp_repository.verify_otp(otp_verification_data.code)
         return OTPVerificationResponse(email=db_otp.email, message="Verification completed.")

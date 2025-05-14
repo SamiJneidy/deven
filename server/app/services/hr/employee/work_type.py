@@ -1,6 +1,6 @@
 from app.repositories import WorkTypeRepository
 from app.schemas.hr import WorkTypeCreate, WorkTypeUpdate, WorkTypeResponse
-from app.core.exceptions.hr import WorkTypeNotFound
+from app.core.exceptions.hr import WorkTypeNotFoundException
 
 class WorkTypeService:
     def __init__(self, work_type_repository: WorkTypeRepository) -> None:
@@ -9,7 +9,7 @@ class WorkTypeService:
     async def get_work_type_by_id(self, id: int) -> WorkTypeResponse:
         db_work_type = await self.work_type_repository.get_work_type_by_id(id)
         if not db_work_type:
-            raise WorkTypeNotFound()
+            raise WorkTypeNotFoundException()
         return WorkTypeResponse.model_validate(db_work_type)
 
     async def get_work_types(self, skip: int, limit: int) -> list[WorkTypeResponse]:
@@ -24,12 +24,12 @@ class WorkTypeService:
     async def update_work_type(self, id: int, work_type_data: WorkTypeUpdate) -> WorkTypeResponse:
         db_work_type = await self.work_type_repository.get_work_type_by_id(id)
         if not db_work_type:
-            raise WorkTypeNotFound()
+            raise WorkTypeNotFoundException()
         db_work_type = await self.work_type_repository.update_work_type(id, work_type_data.model_dump())
         return WorkTypeResponse.model_validate(db_work_type)
 
     async def delete_work_type(self, id: int) -> None:
         db_work_type = await self.work_type_repository.get_work_type_by_id(id)
         if not db_work_type:
-            raise WorkTypeNotFound()
+            raise WorkTypeNotFoundException()
         await self.work_type_repository.delete_work_type(id)

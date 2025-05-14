@@ -1,29 +1,29 @@
 from app.core.exceptions.authentication.authentication import (
-    InvalidCredentialsError,
-    UserNotActiveError,
-    PasswordResetNotAllowedError,
-    PasswordsDontMatchError,
-    EmailAlreadyInUseError,
-    InvalidTokenError,
+    InvalidCredentialsException,
+    UserNotActiveException,
+    PasswordResetNotAllowedException,
+    PasswordsDontMatchException,
+    EmailAlreadyInUseException,
+    InvalidTokenException,
 )
 
 from app.core.exceptions.user.users import (
-    UserNotFoundError,
+    UserNotFoundException,
 )
 
 from app.core.exceptions.authentication.otp import (
-    InvalidOTPError,
-    ExpiredOTPError,
-    OTPAlreadyUsedError,
-    MultipleOTPsDetectedError,
-    SuspiciousOTPActivityError,
-    OTPNotFoundError
+    InvalidOTPException,
+    ExpiredOTPException,
+    OTPAlreadyUsedException,
+    MultipleOTPsDetectedException,
+    SuspiciousOTPActivityException,
+    OTPNotFoundException
 )
 
-from app.core.exceptions.company.company import CompanyNotFoundError
+from app.core.exceptions.company.company import CompanyNotFoundException
 
 from app.core.exceptions.hr import (
-    EmployeeNotFound,
-    PersonalEmailAlreadyInUseError,
-    WorkEmailAlreadyInUseError,
+    EmployeeNotFoundException,
+    PersonalEmailAlreadyInUseException,
+    WorkEmailAlreadyInUseException,
 )

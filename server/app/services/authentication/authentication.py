@@ -22,14 +22,14 @@ from app.schemas import (
     CompanyResponse,
 )
 from app.core.exceptions import (
-    InvalidCredentialsError,
-    EmailAlreadyInUseError,
-    UserNotActiveError, 
-    UserNotFoundError,
-    PasswordResetNotAllowedError, 
-    PasswordsDontMatchError,
-    OTPNotFoundError,
-    InvalidTokenError,
+    InvalidCredentialsException,
+    EmailAlreadyInUseException,
+    UserNotActiveException, 
+    UserNotFoundException,
+    PasswordResetNotAllowedException, 
+    PasswordsDontMatchException,
+    OTPNotFoundException,
+    InvalidTokenException,
 )
 from app.core.enums import UserRole, UserStatus, OTPStatus, OTPUsage
 
@@ -50,7 +50,7 @@ class AuthenticationService:
     async def signup(self, user_data: SignUp) -> UserResponse:
         """TO BE ADDED"""
         if await self.user_repository.get_user_by_email(user_data.email):
-            raise EmailAlreadyInUseError()
+            raise EmailAlreadyInUseException()
         user_data.password = hash_password(user_data.password)
         user_create = UserCreate(**user_data.model_dump())
         user_create.role = UserRole.ADMIN
@@ -69,11 +69,11 @@ class AuthenticationService:
         """Returns a pair of token after successful login. The pais is (access token, refresh token)."""
         db_user = await self.user_repository.get_user_by_email(login_data.email)
         if not db_user:
-            raise UserNotFoundError()
+            raise UserNotFoundException()
         if db_user.status != UserStatus.ACTIVE:
-            raise UserNotActiveError()
+            raise UserNotActiveException()
         if not verify_password(login_data.password, db_user.password):
-            raise InvalidCredentialsError()
+            raise InvalidCredentialsException()
         token_payload = TokenPayload(sub=login_data.email)
         access_token = await self.create_access_token(token_payload)
         refresh_token = await self.create_refresh_token(token_payload)
@@ -83,7 +83,7 @@ class AuthenticationService:
         """Request an OTP code for password reset."""
         user: UserResponse = await self.user_service.get_user_by_email(password_reset_otp_request.email)
         if user.status != UserStatus.ACTIVE:
-            raise  UserNotActiveError()
+            raise  UserNotActiveException()
         await self.otp_service.create_password_reset_otp(password_reset_otp_request.email)
         return PasswordResetOTPResponse(message="The OTP code has been sent to your email. Check your inbox or spam folder.")
     
@@ -92,14 +92,14 @@ class AuthenticationService:
         try:
             otp: OTPResponse = await self.otp_service.get_otp_by_email(password_reset_request.email, OTPUsage.PASSWORD_RESET)
             if otp.status != OTPStatus.VERIFIED or password_reset_request.email != otp.email or await self.otp_service.otp_expired(otp.code):
-                raise PasswordResetNotAllowedError()
+                raise PasswordResetNotAllowedException()
             if password_reset_request.password != password_reset_request.confirm_password:
-                raise PasswordsDontMatchError()
+                raise PasswordsDontMatchException()
             hashed_password = hash_password(password_reset_request.password)
             db_user = await self.auth_repository.reset_password(password_reset_request.email, hashed_password)
             return UserResponse.model_validate(db_user)
-        except OTPNotFoundError:
-            raise PasswordResetNotAllowedError()
+        except OTPNotFoundException:
+            raise PasswordResetNotAllowedException()
         
     async def create_access_token(self, token_payload: TokenPayload) -> str:
         """Creates an access token."""
@@ -121,7 +121,7 @@ class AuthenticationService:
             payload_dict: dict = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
             email = payload_dict.get("sub")
             return await self.user_service.get_user_by_email(email)
-        except (jwt.InvalidTokenError, UserNotFoundError):
-            raise InvalidTokenError()
+        except (jwt.InvalidTokenError, UserNotFoundException):
+            raise InvalidTokenException()
         
     
