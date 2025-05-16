@@ -3,12 +3,12 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from typing import Annotated
 from redis.asyncio import Redis
-from app.core.context import current_user
+from app.core.context import current_user, current_company
 from app.core.config.settings import settings
 from app.core.database.database import get_db
 from app.repositories import UserRepository, AuthenticationRepository
 from app.services import OTPService, AuthenticationService, UserService, CompanyService
-from app.schemas import UserResponse
+from app.schemas import UserResponse, CompanyResponse
 from app.core.dependencies.user import get_user_service, get_user_repository
 from app.core.dependencies.company import get_company_service
 from app.core.dependencies.authentication.otp import get_otp_service
@@ -39,10 +39,22 @@ def get_authentication_service(
 
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)], 
-    auth_service: Annotated[AuthenticationService, Depends(get_authentication_service)]
+    auth_service: Annotated[AuthenticationService, Depends(get_authentication_service)],
+    company_service: Annotated[CompanyService, Depends(get_company_service)],
 ) -> UserResponse:
     """Returns the current user from the token."""
     user = await auth_service.get_user_from_token(token)
-    current_user.set(user)
+    current_user.set(user)    
+    company = await company_service.get_company_by_id(user.company_id)
+    current_company.set(company)
     return user
 
+
+async def get_current_company(
+    current_user: Annotated[UserResponse, Depends(get_current_user)],
+    company_service: Annotated[CompanyService, Depends(get_company_service)],
+) -> CompanyResponse:
+    """Returns the current compnay for the logged user."""
+    company = await company_service.get_company_by_id(current_user.company_id)
+    current_company.set(company)
+    return company

@@ -62,7 +62,6 @@ class AuthenticationService:
         user_dict.update({"company_id": company.id})
         db_user = await self.user_repository.create_user(user_dict)
         x = await self.otp_service.create_email_verification_otp(email=user_data.email)
-        print(x.code)
         return UserResponse.model_validate(db_user)
 
     async def create_tokens_for_login(self, login_data: Login) -> tuple[str, str]:
