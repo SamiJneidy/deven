@@ -1,1 +1,1 @@
-from app.models.hr.employee import JobTitle, WorkType, Employee
+from app.models.hr.employee import *

@@ -34,3 +34,13 @@ class AuditTimeMixin:
 class AuditMixin(AuditByMixin, AuditTimeMixin):
     """Adds created_at, created_by, updated_at and updated_by to a schema."""
     pass
+
+
+class AddressMixin:
+    """Adds address fields to a pydantic schema."""
+    country: str = Field(..., min_length=2, example="USA")
+    state: str = Field(..., min_length=2, example="New York")
+    city: str = Field(..., min_length=2, example="Brooklyn")
+    postal_code: str | None = Field(default=None, example="1234")
+    address_line1: str | None = Field(defaule=None, min_length=2, example="Down town, St 79, Building 334")
+    address_line2: str | None = Field(defaule=None, min_length=2, example="Down town, St 22, Building 4")

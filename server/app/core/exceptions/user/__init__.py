@@ -1,3 +1,3 @@
-from app.core.exceptions.user.users import (
+from app.core.exceptions.user.user import (
     UserNotFoundException,
 )

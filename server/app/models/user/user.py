@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum as SQ
 from sqlalchemy.orm import relationship
 from app.core.database.database import Base
 from app.core.enums import UserRole, UserStatus
-from app.models.base import BaseModel
+from app.models.common import BaseModel
 
 class User(Base, BaseModel):
     __tablename__ = "users"

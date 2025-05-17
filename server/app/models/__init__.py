@@ -1,5 +1,4 @@
-from app.models.user.user import User
-from app.models.authentication.otp import OTP
-from app.models.company.company import Company
-from app.models.company.department import Department
-from app.models.hr.employee import JobTitle, WorkType, Employee
+from app.models.user import *
+from app.models.authentication import *
+from app.models.company import *
+from app.models.hr import *

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, E
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 from app.core.enums import OTPStatus, OTPUsage
-from app.models.base import AuditTimeMixin
+from app.models.common import AuditTimeMixin
 
 class OTP(Base, AuditTimeMixin):
     __tablename__ = "otps"

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Date, Time, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 from app.core.enums import EmployeeStatus, Gender, Country, MartialStatus
-from app.models.base import BaseModel
+from app.models.common import BaseModel
 
 class Employee(Base, BaseModel):
     __tablename__ = "employees"
@@ -46,16 +46,3 @@ class Employee(Base, BaseModel):
     subordinates = relationship("Employee", foreign_keys=[reporting_manager_id], back_populates="reporting_manager")
     location = relationship("Location", foreign_keys=[location_id], back_populates="employees")
     company = relationship("Company", back_populates="employees")
-
-
-# class Shift(Base, BaseModel):
-#     __tablename__ = "shifts"
-#     id = Column(Integer, primary_key=True, index=True)
-#     name = Column(String, nullable=False)
-#     start_time = Column(Time, nullable=False)
-#     end_time = Column(Time, nullable=False)
-#     description = Column(String, nullable=True)
-#     company_id = Column(Integer, ForeignKey('companies.id'), nullable=False)
-    
-#     employees = relationship("Employee", back_populates="shift")
-#     company = relationship("Company", foreign_keys=[company_id], back_populates="shifts")

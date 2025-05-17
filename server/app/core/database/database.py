@@ -1,8 +1,6 @@
 from sqlalchemy import and_, create_engine, event
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, sessionmaker, with_loader_criteria
-from fastapi import Depends
-from app.models.base import CompanyInfo
+from sqlalchemy.orm import Session, sessionmaker
 from app.core.context import current_company
 from app.core.config.settings import settings
 
