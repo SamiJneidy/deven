@@ -1,7 +1,7 @@
 from math import ceil
 from fastapi import APIRouter, status, Query
 from app.schemas.user import UserResponse
-from app.schemas import SignleObjectResponse, PaginationResponse, DepartmentCreate, DepartmentUpdate, DepartmentResponse
+from app.schemas import SignleObjectResponse, PaginatedResponse, DepartmentCreate, DepartmentUpdate, DepartmentResponse
 from app.services import DepartmentService
 from app.core.dependencies import (
     Annotated, 
@@ -18,7 +18,7 @@ router = APIRouter(
 
 @router.get(
     path="/", 
-    response_model=PaginationResponse[DepartmentResponse],
+    response_model=PaginatedResponse[DepartmentResponse],
     responses={
         status.HTTP_200_OK: {
             "description": "The departments has been returned successfully."
@@ -30,19 +30,9 @@ async def get_departments(
     current_user: Annotated[UserResponse, Depends(get_current_user)],
     page: int = Query(1, ge=1),
     limit: int = Query(10, ge=1),
-) -> PaginationResponse[DepartmentResponse]:
+) -> PaginatedResponse[DepartmentResponse]:
     """Get all departments."""
-    skip = (page - 1) * limit
-    data = await department_service.get_departments(skip, limit)
-    rows = len(data)
-    pages = ceil(rows / limit)
-    return PaginationResponse[DepartmentResponse](
-        data=data,
-        total_rows=len(data),
-        total_pages=pages,
-        current_page=page,
-        limit=limit
-    )
+    return await department_service.get_departments(page, limit)
 
 
 @router.get(

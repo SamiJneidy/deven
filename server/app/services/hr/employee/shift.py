@@ -1,5 +1,7 @@
+from math import ceil
 from app.repositories import ShiftRepository
 from app.schemas.hr import ShiftCreate, ShiftUpdate, ShiftResponse
+from app.schemas.common import PaginatedResponse
 from app.core.exceptions.hr import ShiftNotFoundException
 
 class ShiftService:
@@ -12,10 +14,18 @@ class ShiftService:
             raise ShiftNotFoundException()
         return ShiftResponse.model_validate(db_shift)
 
-    async def get_shifts(self, skip: int, limit: int) -> list[ShiftResponse]:
-        db_shifts = await self.shift_repository.get_shifts(skip, limit)
-        shifts = [ShiftResponse.model_validate(db_shift) for db_shift in db_shifts]
-        return shifts
+    async def get_shifts(self, page: int, limit: int) -> PaginatedResponse[ShiftResponse]:
+        skip = (page - 1) * limit
+        db_shifts, total_rows = await self.shift_repository.get_shifts(skip, limit)
+        shifts = [ShiftResponse.model_validate(db_department) for db_department in db_shifts]
+        pages = ceil(total_rows / limit)
+        return PaginatedResponse[ShiftResponse](
+            data=shifts,
+            total_rows=total_rows,
+            total_pages=pages,
+            current_page=page,
+            limit=limit
+        )
 
     async def create_shift(self, shift_data: ShiftCreate) -> ShiftResponse:
         db_shift = await self.shift_repository.create_shift(shift_data.model_dump())

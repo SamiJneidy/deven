@@ -1,7 +1,7 @@
 from math import ceil
 from fastapi import APIRouter, status, Query
 from app.schemas.user import UserResponse
-from app.schemas import SignleObjectResponse, PaginationResponse, LocationCreate, LocationUpdate, LocationResponse
+from app.schemas import SignleObjectResponse, PaginatedResponse, LocationCreate, LocationUpdate, LocationResponse
 from app.services import LocationService
 from app.core.dependencies import (
     Annotated, 
@@ -18,7 +18,7 @@ router = APIRouter(
 
 @router.get(
     path="/", 
-    response_model=PaginationResponse[LocationResponse],
+    response_model=PaginatedResponse[LocationResponse],
     responses={
         status.HTTP_200_OK: {
             "description": "The locations has been returned successfully."
@@ -30,19 +30,9 @@ async def get_locations(
     current_user: Annotated[UserResponse, Depends(get_current_user)],
     page: int = Query(1, ge=1),
     limit: int = Query(10, ge=1),
-) -> PaginationResponse[LocationResponse]:
+) -> PaginatedResponse[LocationResponse]:
     """Get all locations."""
-    skip = (page - 1) * limit
-    data = await location_service.get_locations(skip, limit)
-    rows = len(data)
-    pages = ceil(rows / limit)
-    return PaginationResponse[LocationResponse](
-        data=data,
-        total_rows=len(data),
-        total_pages=pages,
-        current_page=page,
-        limit=limit
-    )
+    return await location_service.get_locations(page, limit)
 
 
 @router.get(

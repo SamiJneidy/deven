@@ -8,7 +8,7 @@ class SignleObjectResponse(BaseModel, Generic[T]):
     """Used when returning a single object get response"""
     data: T = Field(..., description="This may be any schema value")
     
-class PaginationResponse(BaseModel, Generic[T]):
+class PaginatedResponse(BaseModel, Generic[T]):
     """Used when returning a paginated response"""
     data: list[T]
     total_rows: int | None = None

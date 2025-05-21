@@ -11,7 +11,7 @@ from app.core.database.database import Base
 from app.models.common import AuditByMixin, AuditTimeMixin, AuditMixin
 from app.models.user.user import User
 from app.models.authentication.otp import OTP
-from app.models.hr.employee import JobTitle, WorkType, Shift, Employee
+from app.models.hr.employee import JobTitle, WorkType, Shift, Employee, EmployeeEducation
 from app.models.company import Company, Location, Department
 from app.core.config.settings import settings
 

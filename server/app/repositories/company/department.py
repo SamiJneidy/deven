@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select, insert, update, delete
+from sqlalchemy import select, insert, update, delete, func
 from app.models import Department
 
 class DepartmentRepository:
@@ -9,8 +9,10 @@ class DepartmentRepository:
     async def get_department_by_id(self, id: int) -> Department | None:
         return self.db.query(Department).filter(Department.id == id).first()
 
-    async def get_departments(self, skip: int, limit: int) -> list[Department]:
-        return self.db.query(Department).offset(skip).limit(limit).all()
+    async def get_departments(self, skip: int, limit: int) -> tuple[list[Department], int]:
+        data = self.db.query(Department).offset(skip).limit(limit).all()
+        total_rows = self.db.execute(select(func.count(Department.id))).scalar()
+        return data, total_rows
 
     async def create_department(self, data: dict) -> Department:
         db_department = Department(**data)

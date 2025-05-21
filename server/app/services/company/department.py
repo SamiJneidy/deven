@@ -1,5 +1,7 @@
+from math import ceil
 from app.repositories import DepartmentRepository
 from app.schemas.company import DepartmentCreate, DepartmentUpdate, DepartmentResponse
+from app.schemas import PaginatedResponse
 from app.core.exceptions.company import DepartmentNotFoundException
 
 class DepartmentService:
@@ -12,10 +14,18 @@ class DepartmentService:
             raise DepartmentNotFoundException()
         return DepartmentResponse.model_validate(db_department)
 
-    async def get_departments(self, skip: int, limit: int) -> list[DepartmentResponse]:
-        db_departments = await self.department_repository.get_departments(skip, limit)
+    async def get_departments(self, page: int, limit: int) -> PaginatedResponse[DepartmentResponse]:
+        skip = (page - 1) * limit
+        db_departments, total_rows = await self.department_repository.get_departments(skip, limit)
         departments = [DepartmentResponse.model_validate(db_department) for db_department in db_departments]
-        return departments
+        pages = ceil(total_rows / limit)
+        return PaginatedResponse[DepartmentResponse](
+            data=departments,
+            total_rows=total_rows,
+            total_pages=pages,
+            current_page=page,
+            limit=limit
+        )
 
     async def create_department(self, department_data: DepartmentCreate) -> DepartmentResponse:
         db_department = await self.department_repository.create_department(department_data.model_dump())

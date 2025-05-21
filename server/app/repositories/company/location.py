@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select, insert, update, delete
+from sqlalchemy import select, insert, update, delete, func
 from app.models import Location
 
 class LocationRepository:
@@ -9,8 +9,11 @@ class LocationRepository:
     async def get_location_by_id(self, id: int) -> Location | None:
         return self.db.query(Location).filter(Location.id == id).first()
 
-    async def get_locations(self, skip: int, limit: int) -> list[Location]:
-        return self.db.query(Location).offset(skip).limit(limit).all()
+    async def get_locations(self, skip: int, limit: int) -> tuple[list[Location], int]:
+        data = self.db.query(Location).offset(skip).limit(limit).all()
+        total_rows = self.db.execute(select(func.count(Location.id))).scalar()
+        return data, total_rows
+
 
     async def create_location(self, data: dict) -> Location:
         db_location = Location(**data)

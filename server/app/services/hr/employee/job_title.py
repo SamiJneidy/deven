@@ -1,5 +1,7 @@
+from math import ceil
 from app.repositories import JobTitleRepository
 from app.schemas.hr import JobTitleCreate, JobTitleUpdate, JobTitleResponse
+from app.schemas.common import PaginatedResponse
 from app.core.exceptions.hr import JobTitleNotFoundException
 
 class JobTitleService:
@@ -12,10 +14,18 @@ class JobTitleService:
             raise JobTitleNotFoundException()
         return JobTitleResponse.model_validate(db_job_title)
 
-    async def get_job_titles(self, skip: int, limit: int) -> list[JobTitleResponse]:
-        db_job_titles = await self.job_title_repository.get_job_titles(skip, limit)
-        job_titles = [JobTitleResponse.model_validate(db_job_title) for db_job_title in db_job_titles]
-        return job_titles
+    async def get_job_titles(self, page: int, limit: int) -> PaginatedResponse[JobTitleResponse]:
+        skip = (page - 1) * limit
+        db_job_titles, total_rows = await self.job_title_repository.get_job_titles(skip, limit)
+        job_titles = [JobTitleResponse.model_validate(db_department) for db_department in db_job_titles]
+        pages = ceil(total_rows / limit)
+        return PaginatedResponse[JobTitleResponse](
+            data=job_titles,
+            total_rows=total_rows,
+            total_pages=pages,
+            current_page=page,
+            limit=limit
+        )
 
     async def create_job_title(self, job_title_data: JobTitleCreate) -> JobTitleResponse:
         db_job_title = await self.job_title_repository.create_job_title(job_title_data.model_dump())

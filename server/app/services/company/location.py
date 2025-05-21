@@ -1,5 +1,7 @@
+from math import ceil
 from app.repositories import LocationRepository
 from app.schemas.company import LocationCreate, LocationUpdate, LocationResponse
+from app.schemas.common import PaginatedResponse
 from app.core.exceptions.company import LocationNotFoundException
 
 class LocationService:
@@ -12,10 +14,18 @@ class LocationService:
             raise LocationNotFoundException()
         return LocationResponse.model_validate(db_location)
 
-    async def get_locations(self, skip: int, limit: int) -> list[LocationResponse]:
-        db_locations = await self.location_repository.get_locations(skip, limit)
-        locations = [LocationResponse.model_validate(db_location) for db_location in db_locations]
-        return locations
+    async def get_locations(self, page: int, limit: int) -> PaginatedResponse[LocationResponse]:
+        skip = (page - 1) * limit
+        db_locations, total_rows = await self.location_repository.get_locations(skip, limit)
+        locations = [LocationResponse.model_validate(db_department) for db_department in db_locations]
+        pages = ceil(total_rows / limit)
+        return PaginatedResponse[LocationResponse](
+            data=locations,
+            total_rows=total_rows,
+            total_pages=pages,
+            current_page=page,
+            limit=limit
+        )
 
     async def create_location(self, location_data: LocationCreate) -> LocationResponse:
         db_location = await self.location_repository.create_location(location_data.model_dump())

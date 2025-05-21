@@ -1,7 +1,7 @@
 from math import ceil
 from fastapi import APIRouter, status, Query
 from app.schemas.user import UserResponse
-from app.schemas import SignleObjectResponse, PaginationResponse, ShiftCreate, ShiftUpdate, ShiftResponse
+from app.schemas import SignleObjectResponse, PaginatedResponse, ShiftCreate, ShiftUpdate, ShiftResponse
 from app.services import ShiftService
 from app.core.dependencies import (
     Annotated, 
@@ -18,7 +18,7 @@ router = APIRouter(
 
 @router.get(
     path="/", 
-    response_model=PaginationResponse[ShiftResponse],
+    response_model=PaginatedResponse[ShiftResponse],
     responses={
         status.HTTP_200_OK: {
             "description": "The shifts has been returned successfully."
@@ -30,19 +30,9 @@ async def get_shifts(
     current_user: Annotated[UserResponse, Depends(get_current_user)],
     page: int = Query(1, ge=1),
     limit: int = Query(10, ge=1),
-) -> PaginationResponse[ShiftResponse]:
+) -> PaginatedResponse[ShiftResponse]:
     """Get all shifts.""" 
-    skip = (page - 1) * limit
-    data = await shift_service.get_shifts(skip, limit)
-    rows = len(data)
-    pages = ceil(rows / limit)
-    return PaginationResponse[ShiftResponse](
-        data=data,
-        total_rows=len(data),
-        total_pages=pages,
-        current_page=page,
-        limit=limit
-    )
+    return await shift_service.get_shifts(page, limit)
 
 
 @router.get(
