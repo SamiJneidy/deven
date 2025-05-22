@@ -17,7 +17,7 @@ class WorkTypeService:
     async def get_work_types(self, page: int, limit: int) -> PaginatedResponse[WorkTypeResponse]:
         skip = (page - 1) * limit
         db_work_types, total_rows = await self.work_type_repository.get_work_types(skip, limit)
-        work_types = [WorkTypeResponse.model_validate(db_department) for db_department in db_work_types]
+        work_types = [WorkTypeResponse.model_validate(db_work_type) for db_work_type in db_work_types]
         pages = ceil(total_rows / limit)
         return PaginatedResponse[WorkTypeResponse](
             data=work_types,

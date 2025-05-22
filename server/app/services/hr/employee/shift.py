@@ -17,7 +17,7 @@ class ShiftService:
     async def get_shifts(self, page: int, limit: int) -> PaginatedResponse[ShiftResponse]:
         skip = (page - 1) * limit
         db_shifts, total_rows = await self.shift_repository.get_shifts(skip, limit)
-        shifts = [ShiftResponse.model_validate(db_department) for db_department in db_shifts]
+        shifts = [ShiftResponse.model_validate(db_shift) for db_shift in db_shifts]
         pages = ceil(total_rows / limit)
         return PaginatedResponse[ShiftResponse](
             data=shifts,

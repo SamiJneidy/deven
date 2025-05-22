@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select, insert, update, delete
+from sqlalchemy import select, insert, update, delete, func
 from app.models import Employee
 
 class EmployeeRepository:
@@ -14,6 +14,11 @@ class EmployeeRepository:
 
     async def get_employee_by_work_email(self, email: str) -> Employee | None:
         return self.db.query(Employee).filter(Employee.work_email == email).first()
+
+    async def get_employees(self, skip: int, limit: int) -> tuple[list[Employee], int]:
+        data = self.db.query(Employee).offset(skip).limit(limit).all()
+        total_rows = self.db.execute(select(func.count(Employee.id))).scalar()
+        return data, total_rows
 
     async def create_employee(self, data: dict) -> Employee:
         db_employee = Employee(**data)

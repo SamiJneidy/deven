@@ -17,7 +17,7 @@ class JobTitleService:
     async def get_job_titles(self, page: int, limit: int) -> PaginatedResponse[JobTitleResponse]:
         skip = (page - 1) * limit
         db_job_titles, total_rows = await self.job_title_repository.get_job_titles(skip, limit)
-        job_titles = [JobTitleResponse.model_validate(db_department) for db_department in db_job_titles]
+        job_titles = [JobTitleResponse.model_validate(db_job_title) for db_job_title in db_job_titles]
         pages = ceil(total_rows / limit)
         return PaginatedResponse[JobTitleResponse](
             data=job_titles,
