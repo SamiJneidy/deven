@@ -15,3 +15,6 @@ class JobTitleResponse(JobTitleBase, AuditMixin):
     company_id: int
     model_config = ConfigDict(from_attributes=True)
 
+class JobTitleNestedResponse(JobTitleBase):
+    id: int
+    model_config = ConfigDict(from_attributes=True)

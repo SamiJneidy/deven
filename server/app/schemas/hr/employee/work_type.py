@@ -4,7 +4,6 @@ from app.schemas.common import AuditMixin
 class WorkTypeBase(BaseModel):
     name: str = Field(..., min_length=1, example="Fulltime")
     
-
 class WorkTypeCreate(WorkTypeBase):
     pass
 
@@ -16,3 +15,6 @@ class WorkTypeResponse(WorkTypeBase, AuditMixin):
     company_id: int
     model_config = ConfigDict(from_attributes=True)
 
+class WorkTypeNestedResponse(WorkTypeBase):
+    id: int
+    model_config = ConfigDict(from_attributes=True)

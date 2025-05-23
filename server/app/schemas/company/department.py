@@ -15,3 +15,6 @@ class DepartmentResponse(DepartmentBase, AuditMixin):
     company_id: int
     model_config = ConfigDict(from_attributes=True)
 
+class DepartmentNestedResponse(DepartmentBase):
+    id: int
+    model_config = ConfigDict(from_attributes=True)

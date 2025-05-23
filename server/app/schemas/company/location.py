@@ -15,3 +15,6 @@ class LocationResponse(LocationBase, AuditMixin):
     company_id: int
     model_config = ConfigDict(from_attributes=True)
 
+class LocationNestedResponse(LocationBase):
+    id: int
+    model_config = ConfigDict(from_attributes=True)

@@ -1,34 +1,13 @@
 from pydantic import BaseModel, EmailStr, ConfigDict, Field
 from datetime import date
+from app.schemas.hr.employee.shift import ShiftNestedResponse
+from app.schemas.hr.employee.work_type import WorkTypeNestedResponse
+from app.schemas.hr.employee.job_title import JobTitleNestedResponse 
+from app.schemas.company.department import DepartmentNestedResponse
+from app.schemas.company.location import LocationNestedResponse
+from app.schemas.hr.employee.employee_education import EmployeeEducationOnboarding, EmployeeEducationResponse
 from app.schemas.common import AddressMixin, AuditMixin
 from app.core.enums import Gender, MartialStatus, EmployeeStatus
-
-class EmployeeEducationBase(BaseModel):
-    field_of_study: str = Field(..., example="Computer Science")
-    degree: str = Field(..., example="BA")
-    institution: str = Field(default=None, example="MIT")
-    start_date: date = Field(default=None, example="2020-04-02")
-    end_date: date = Field(default=None, example="2025-05-01")
-    grade: str = Field(default=None, exmpale="88%")
-    status: str = Field(default=None, example="Completed")
-
-class EmployeeEducationOnboarding(EmployeeEducationBase):
-    """Used when onboarding a new employee within the EmplyeeCreate schema"""
-    pass
-
-class EmployeeEducationCreate(EmployeeEducationBase):
-    """Used when creating a new education for an existing employee"""
-    employee_id: int
-
-class EmployeeEducationUpdate(EmployeeEducationBase):
-    pass 
-
-class EmployeeEducationResponse(EmployeeEducationBase, AuditMixin):
-    id: int
-    company_id: int
-    employee_id: int
-    model_config = ConfigDict(from_attributes=True)
-
 
 class EmployeeBase(BaseModel, AddressMixin):
     firstname: str = Field(..., min_length=1, example="Sami")
@@ -45,12 +24,12 @@ class EmployeeBase(BaseModel, AddressMixin):
     emergency_phone: str | None = Field(default=None, example="+963934989517")
     emergency_email: EmailStr | None = Field(default=None, example="mehdyasaad@gmail.com")
     # Job info
-    job_title_id: int = Field(..., example=1)
-    department_id: int = Field(..., example=1)
-    shift_id: int = Field(int, example=1)
-    work_type_id: int = Field(int, example=1)
+    job_title: JobTitleNestedResponse
+    department: DepartmentNestedResponse
+    shift: ShiftNestedResponse
+    work_type: WorkTypeNestedResponse
     reporting_manager_id: int | None = Field(default=None, example=1)
-    location_id: int = Field(..., example=1)
+    location: LocationNestedResponse
     date_of_joining: date = Field(..., example="2025-05-01", description="Date of joining following the format: 'yyyy-mm-dd'")
     in_probation: bool = Field(..., example=True)
     probation_period: int | None = Field(default=None, example=4, description="Probation period in weeks.")
@@ -59,7 +38,7 @@ class EmployeeBase(BaseModel, AddressMixin):
 
 
 class EmployeeCreate(EmployeeBase):
-    education: list[EmployeeEducationCreate]
+    education: list[EmployeeEducationOnboarding]
     pass
 
 class EmployeeUpdate(EmployeeBase):

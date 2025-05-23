@@ -22,7 +22,7 @@ class Employee(Base, BaseModel, AddressMixin):
     __tablename__ = "employees"
     # Personal info
     id = Column(Integer, primary_key=True, index=True)
-    firstname = Column(String, unique=True, nullable=False, index=True)
+    firstname = Column(String, nullable=False)
     lastname = Column(String, nullable=False)
     gender = Column(SQLEnum(Gender), nullable=False)
     date_of_birth = Column(Date, nullable=False)

@@ -75,7 +75,7 @@ class EmployeeService:
         for education in employee_data.education:
             education_dict: dict = education.model_dump()
             education_dict["employee_id"] =  db_employee.id
-            self.employee_education_repository.create_employee_education(education_dict)
+            await self.employee_education_repository.create_employee_education(education_dict)
 
         return EmployeeResponse.model_validate(db_employee)
 
