@@ -9,7 +9,7 @@ from app.schemas.hr.employee.employee_education import EmployeeEducationOnboardi
 from app.schemas.common import AddressMixin, AuditMixin
 from app.core.enums import Gender, MartialStatus, EmployeeStatus
 
-class EmployeeBase(BaseModel, AddressMixin):
+class EmployeeCommon(BaseModel, AddressMixin):
     firstname: str = Field(..., min_length=1, example="Sami")
     lastname: str = Field(..., min_length=1, example="Jneidy")
     gender: Gender = Field(..., example=Gender.MALE)
@@ -24,28 +24,33 @@ class EmployeeBase(BaseModel, AddressMixin):
     emergency_phone: str | None = Field(default=None, example="+963934989517")
     emergency_email: EmailStr | None = Field(default=None, example="mehdyasaad@gmail.com")
     # Job info
-    job_title: JobTitleNestedResponse
-    department: DepartmentNestedResponse
-    shift: ShiftNestedResponse
-    work_type: WorkTypeNestedResponse
     reporting_manager_id: int | None = Field(default=None, example=1)
-    location: LocationNestedResponse
+    location_id: int
     date_of_joining: date = Field(..., example="2025-05-01", description="Date of joining following the format: 'yyyy-mm-dd'")
     in_probation: bool = Field(..., example=True)
     probation_period: int | None = Field(default=None, example=4, description="Probation period in weeks.")
     # System info
     status: EmployeeStatus = Field(..., example=EmployeeStatus.WORKING)
 
+class EmployeeBase(EmployeeCommon):
+    job_title_id: int
+    department_id: int
+    shift_id: int
+    work_type_id: int
 
 class EmployeeCreate(EmployeeBase):
     education: list[EmployeeEducationOnboarding]
-    pass
 
 class EmployeeUpdate(EmployeeBase):
     pass
 
-class EmployeeResponse(EmployeeBase, AuditMixin):
+class EmployeeResponse(EmployeeCommon, AuditMixin):
     id: int
     company_id: int
     education: list[EmployeeEducationResponse]
+    job_title: JobTitleNestedResponse
+    department: DepartmentNestedResponse
+    shift: ShiftNestedResponse
+    location: LocationNestedResponse
+    work_type: WorkTypeNestedResponse
     model_config = ConfigDict(from_attributes=True)

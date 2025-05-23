@@ -89,7 +89,7 @@ class EmployeeService:
         ):
             raise WorkEmailAlreadyInUseException()
         db_employee = await self.employee_repository.update_employee(
-            employee_data.model_dump()
+            employee_data.model_dump(exclude_unset=True)
         )
         return EmployeeResponse.model_validate(db_employee)
 
