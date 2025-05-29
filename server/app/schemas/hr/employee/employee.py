@@ -24,7 +24,7 @@ class EmployeeCommon(BaseModel, AddressMixin):
     personal_email: EmailStr = Field(..., example="samihanijneidy@gmail.com")
     phone: str = Field(..., example="+963934989517")
     emergency_phone: str | None = Field(default=None, example="+963934989517")
-    emergency_email: EmailStr | None = Field(default=None, example="mehdyasaad@gmail.com")
+    emergency_email: str | None = Field(default=None, example="mehdyasaad@gmail.com")
     # Job info
     reporting_manager_id: int | None = Field(default=None, example=1)
     location_id: int

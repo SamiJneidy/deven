@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from datetime import date
 from app.schemas.common import AuditMixin
 
@@ -6,10 +6,17 @@ class EmployeeEducationBase(BaseModel):
     field_of_study: str = Field(..., example="Computer Science")
     degree: str = Field(..., example="BA")
     institution: str = Field(default=None, example="MIT")
-    start_date: date = Field(default=None, example="2020-04-02")
-    end_date: date = Field(default=None, example="2025-05-01")
-    grade: str = Field(default=None, exmpale="88%")
-    status: str = Field(default=None, example="Completed")
+    start_date: date | None = Field(default=None, example="2020-04-02")
+    end_date: date | None = Field(default=None, example="2025-05-01")
+    grade: str | None = Field(default=None, exmpale="88%")
+    status: str | None = Field(default=None, example="Completed")
+
+    @field_validator('start_date', 'end_date', mode='before')
+    def date_is_empty(cls, v):
+        if v == "":
+            return None
+        return v
+
 
 class EmployeeEducationOnboarding(EmployeeEducationBase):
     """Used when onboarding a new employee within the EmplyeeCreate schema"""
