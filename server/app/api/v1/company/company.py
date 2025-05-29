@@ -8,8 +8,8 @@ from app.core.dependencies import (
 )
 
 router = APIRouter(
-    prefix="/company", 
-    tags=["Company"],
+    prefix="/companies", 
+    tags=["Companies"],
 )
 
 
@@ -24,7 +24,7 @@ router = APIRouter(
             "description": "The company was not found.",
             "content": {
                 "application/json": {
-                    "exmpales": {
+                    "examples": {
                         "CompanyNotFound": {
                             "value": {
                                 "code": status.HTTP_404_NOT_FOUND,
@@ -74,7 +74,7 @@ async def create_company(
             "description": "The company was not found.",
             "content": {
                 "application/json": {
-                    "exmpales": {
+                    "examples": {
                         "CompanyNotFound": {
                             "value": {
                                 "code": status.HTTP_404_NOT_FOUND,

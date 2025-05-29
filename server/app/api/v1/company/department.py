@@ -11,8 +11,8 @@ from app.core.dependencies import (
 )
 
 router = APIRouter(
-    prefix="/department", 
-    tags=["Department"],
+    prefix="/departments", 
+    tags=["Departments"],
 )
 
 
@@ -46,7 +46,7 @@ async def get_departments(
             "description": "The department was not found.",
             "content": {
                 "application/json": {
-                    "exmpales": {
+                    "examples": {
                         "DepartmentNotFound": {
                             "value": {
                                 "code": status.HTTP_404_NOT_FOUND,
@@ -99,7 +99,7 @@ async def create_department(
             "description": "The department was not found.",
             "content": {
                 "application/json": {
-                    "exmpales": {
+                    "examples": {
                         "DepartmentNotFound": {
                             "value": {
                                 "code": status.HTTP_404_NOT_FOUND,
@@ -134,7 +134,7 @@ async def update_department(
             "description": "The department was not found.",
             "content": {
                 "application/json": {
-                    "exmpales": {
+                    "examples": {
                         "DepartmentNotFound": {
                             "value": {
                                 "code": status.HTTP_404_NOT_FOUND,

@@ -6,6 +6,7 @@ class EmployeeRepository:
     def __init__(self, db: Session) -> None:
         self.db = db
 
+    # Employee data
     async def get_employee_by_id(self, id: int) -> Employee | None:
         return self.db.query(Employee).filter(Employee.id == id).first()
 
@@ -35,3 +36,19 @@ class EmployeeRepository:
     async def delete_employee(self, id: int) -> None:
         self.db.execute(delete(Employee).where(Employee.id==id))
         self.db.commit()
+
+    async def upload_profile_picture(self, id: int, image_url: str, public_id: str) -> tuple[str, str]:
+        self.db.execute(update(Employee).where(Employee.id==id).values(
+            profile_picture_url=image_url, 
+            profile_picture_public_id=public_id)
+        )
+        self.db.commit()
+        return image_url, public_id
+
+    async def remove_profile_picture(self, id: int) -> None:
+        self.db.execute(update(Employee).where(Employee.id==id).values(
+                profile_picture_url="", 
+                profile_picture_public_id="")
+            )
+        self.db.commit()
+        

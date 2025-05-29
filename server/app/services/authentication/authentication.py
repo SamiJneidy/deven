@@ -21,7 +21,7 @@ from app.schemas import (
     CompanyCreate,
     CompanyResponse,
 )
-from app.core.exceptions import (
+from app.core.exceptions.service_exceptions import (
     InvalidCredentialsException,
     EmailAlreadyInUseException,
     UserNotActiveException, 

@@ -9,3 +9,4 @@ from app.core.dependencies.authentication import *
 from app.core.dependencies.company import *
 from app.core.dependencies.hr import *
 from app.core.dependencies.user import *
+from app.core.dependencies.utilities import *

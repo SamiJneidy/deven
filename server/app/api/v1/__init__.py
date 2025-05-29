@@ -6,6 +6,7 @@ from app.api.v1.hr import (
     job_title_router,
     shift_router,
     employee_education_router,
+    employee_document_router,
     employee_router,
 )
 
@@ -18,4 +19,5 @@ router.include_router(department_router)
 router.include_router(shift_router)
 router.include_router(location_router)
 router.include_router(employee_education_router)
+router.include_router(employee_document_router)
 router.include_router(employee_router)

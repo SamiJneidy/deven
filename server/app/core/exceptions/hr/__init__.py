@@ -1,1 +1,0 @@
-from app.core.exceptions.hr.employee import *

@@ -1,11 +1,11 @@
 from pydantic import BaseModel, EmailStr, ConfigDict, Field
 from datetime import date
-from app.schemas.hr.employee.shift import ShiftNestedResponse
-from app.schemas.hr.employee.work_type import WorkTypeNestedResponse
-from app.schemas.hr.employee.job_title import JobTitleNestedResponse 
+from app.schemas.hr.hr_settings.shift import ShiftNestedResponse
+from app.schemas.hr.hr_settings.work_type import WorkTypeNestedResponse
+from app.schemas.hr.hr_settings.job_title import JobTitleNestedResponse 
 from app.schemas.company.department import DepartmentNestedResponse
 from app.schemas.company.location import LocationNestedResponse
-from app.schemas.hr.employee.employee_education import EmployeeEducationOnboarding, EmployeeEducationResponse
+from app.schemas.hr.employee.education import EmployeeEducationOnboarding, EmployeeEducationResponse
 from app.schemas.common import AddressMixin, AuditMixin
 from app.core.enums import Gender, MartialStatus, EmployeeStatus
 
@@ -17,6 +17,8 @@ class EmployeeCommon(BaseModel, AddressMixin):
     martial_status: MartialStatus = Field(..., example=MartialStatus.Married)
     children: int | None = Field(defaule=None, example=2)
     years_of_experience: int | None = Field(default=None, example=1)
+    profile_picture_url: str | None = Field(default=None)
+    profile_picture_public_id: str | None = Field(default=None)
     # Contact
     work_email: EmailStr = Field(..., example="samihanijneidy@deven.com")
     personal_email: EmailStr = Field(..., example="samihanijneidy@gmail.com")
@@ -54,3 +56,7 @@ class EmployeeResponse(EmployeeCommon, AuditMixin):
     location: LocationNestedResponse
     work_type: WorkTypeNestedResponse
     model_config = ConfigDict(from_attributes=True)
+
+class ProfilePicture(BaseModel):
+    profile_picture_url: str
+    profile_picture_public_id: str

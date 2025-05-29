@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from app.core.enums import OTPStatus, OTPUsage
 from app.repositories import OTPRepository
-from app.core.exceptions import InvalidOTPException, ExpiredOTPException, OTPAlreadyUsedException, OTPNotFoundException
+from app.core.exceptions.service_exceptions import InvalidOTPException, ExpiredOTPException, OTPAlreadyUsedException, OTPNotFoundException
 from app.core.config.settings import settings
 from app.core.utilities.mail import send_email 
 from app.schemas import OTPCreate, OTPResponse, OTPVerificationRequest, OTPVerificationResponse

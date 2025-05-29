@@ -11,8 +11,8 @@ from app.core.dependencies import (
 )
 
 router = APIRouter(
-    prefix="/location", 
-    tags=["Location"],
+    prefix="/locations", 
+    tags=["Locations"],
 )
 
 
@@ -46,7 +46,7 @@ async def get_locations(
             "description": "The location was not found.",
             "content": {
                 "application/json": {
-                    "exmpales": {
+                    "examples": {
                         "LocationNotFound": {
                             "value": {
                                 "code": status.HTTP_404_NOT_FOUND,
@@ -99,7 +99,7 @@ async def create_location(
             "description": "The location was not found.",
             "content": {
                 "application/json": {
-                    "exmpales": {
+                    "examples": {
                         "LocationNotFound": {
                             "value": {
                                 "code": status.HTTP_404_NOT_FOUND,
@@ -134,7 +134,7 @@ async def update_location(
             "description": "The location was not found.",
             "content": {
                 "application/json": {
-                    "exmpales": {
+                    "examples": {
                         "LocationNotFound": {
                             "value": {
                                 "code": status.HTTP_404_NOT_FOUND,

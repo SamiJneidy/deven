@@ -2,7 +2,7 @@ from math import ceil
 from app.repositories import DepartmentRepository
 from app.schemas.company import DepartmentCreate, DepartmentUpdate, DepartmentResponse
 from app.schemas import PaginatedResponse
-from app.core.exceptions.company import DepartmentNotFoundException
+from app.core.exceptions.service_exceptions import DepartmentNotFoundException
 
 class DepartmentService:
     def __init__(self, department_repository: DepartmentRepository) -> None:

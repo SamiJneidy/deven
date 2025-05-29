@@ -2,7 +2,7 @@ from math import ceil
 from app.repositories import LocationRepository
 from app.schemas.company import LocationCreate, LocationUpdate, LocationResponse
 from app.schemas.common import PaginatedResponse
-from app.core.exceptions.company import LocationNotFoundException
+from app.core.exceptions.service_exceptions import LocationNotFoundException
 
 class LocationService:
     def __init__(self, location_repository: LocationRepository) -> None:

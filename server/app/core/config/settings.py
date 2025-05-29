@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     MAIL_PORT: int
     MAIL_SERVER: str
     REDIS_URL: str
+    CLOUDINARY_CLOUD_NAME: str
+    CLOUDINARY_API_KEY: str
+    CLOUDINARY_API_SECRET: str
+    CLOUDINARY_URL: str
     model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings()

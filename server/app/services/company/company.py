@@ -1,6 +1,6 @@
 from app.repositories import CompanyRepository
 from app.schemas import CompanyCreate, CompanyUpdate, CompanyResponse
-from app.core.exceptions import CompanyNotFoundException
+from app.core.exceptions.service_exceptions import CompanyNotFoundException
 
 
 class CompanyService:
