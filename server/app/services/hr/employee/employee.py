@@ -67,14 +67,6 @@ class EmployeeService:
         )
 
     async def create_employee(self, employee_data: EmployeeCreate) -> EmployeeResponse:
-        if await self.employee_repository.get_employee_by_personal_email(
-            employee_data.personal_email
-        ):
-            raise PersonalEmailAlreadyInUseException()
-        if await self.employee_repository.get_employee_by_work_email(
-            employee_data.work_email
-        ):
-            raise WorkEmailAlreadyInUseException()
         db_employee = await self.employee_repository.create_employee(
             employee_data.model_dump(exclude={"education"})
         )
@@ -85,14 +77,6 @@ class EmployeeService:
         return EmployeeResponse.model_validate(db_employee)
 
     async def update_employee(self, id: int, employee_data: EmployeeUpdate) -> EmployeeResponse:
-        if await self.employee_repository.get_employee_by_personal_email(
-            employee_data.personal_email
-        ):
-            raise PersonalEmailAlreadyInUseException()
-        if await self.employee_repository.get_employee_by_work_email(
-            employee_data.work_email
-        ):
-            raise WorkEmailAlreadyInUseException()
         db_employee = await self.employee_repository.update_employee(
             id, employee_data.model_dump(exclude_unset=True)
         )
