@@ -11,8 +11,8 @@ class Country(str, Enum):
     USA = "USA"
 
 class MartialStatus(str, Enum):
-    Single = "Single"
-    Married = "Married"
+    Single = "single"
+    Married = "married"
 
 class EmployeeStatus(str, Enum):
     WORKING = "working"
